@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 
 using SuperSudoku.Sudoku.Grid;
@@ -9,18 +8,20 @@ namespace SuperSudoku.Sudoku.Constraints
 {
     public class RegionConstraint : ISudokuConstraint
     {
-        private readonly IEnumerable<RowCol> cells;
+        private readonly HashSet<RowCol> cells;
 
         public RegionConstraint(IEnumerable<RowCol> cells)
         {
-            this.cells = cells ?? throw new ArgumentNullException(nameof(cells));
+            cells.ThrowArgIfNull(nameof(cells));
+
+            this.cells = cells.Where(i => i != null).ToHashSet();
         }
 
         public IEnumerable<RowCol> AffectedCells() =>
             this.cells;
 
         public bool AffectsCell(RowCol rowCol) =>
-            this.cells.Any(i => rowCol == i);
+            this.cells.Contains(rowCol);
 
         public bool IsValidPlacement(ISudokuGrid grid, RowCol rowCol, int value)
         {

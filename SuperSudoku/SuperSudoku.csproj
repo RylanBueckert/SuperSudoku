@@ -44,7 +44,6 @@
   <ItemGroup>
     <Compile Include="Program.cs" />
     <Compile Include="Sudoku\Constraints\ArrowConstraint.cs" />
-    <Compile Include="Sudoku\Constraints\BaseSudukuConstraint.cs" />
     <Compile Include="Sudoku\Constraints\RegionConstraint.cs" />
     <Compile Include="Sudoku\Constraints\ISudokuConstraint.cs" />
     <Compile Include="Sudoku\Constraints\SudokuConstraintHelper.cs" />
@@ -57,6 +56,7 @@
     <Compile Include="Sudoku\Solver\SudokuSolver.cs" />
     <Compile Include="Utliity\Extentions\ArrayExtentions.cs" />
     <Compile Include="Utliity\Extentions\EumerableExtentions.cs" />
+    <Compile Include="Utliity\Extentions\ObjectExtentions.cs" />
     <Compile Include="Utliity\Monads.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -1,8 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 
 using SuperSudoku.Sudoku.Grid;
+using SuperSudoku.Utliity.Extentions;
 
 namespace SuperSudoku.Sudoku.Constraints
 {
@@ -10,19 +10,19 @@ namespace SuperSudoku.Sudoku.Constraints
     {
         private readonly RowCol sumCell;
 
-        private readonly IEnumerable<RowCol> arrowCells;
+        private readonly HashSet<RowCol> arrowCells;
 
         public ArrowConstraint(RowCol sumCell, IEnumerable<RowCol> arrowCells)
         {
-            this.sumCell = sumCell ?? throw new ArgumentNullException(nameof(sumCell));
-            this.arrowCells = arrowCells ?? throw new ArgumentNullException(nameof(arrowCells));
+            this.sumCell = sumCell.ThrowArgIfNull(nameof(sumCell));
+            this.arrowCells = arrowCells.ThrowArgIfNull(nameof(arrowCells)).Where(i => i != null).ToHashSet();
         }
 
         public IEnumerable<RowCol> AffectedCells() =>
             this.arrowCells.Append(this.sumCell);
 
         public bool AffectsCell(RowCol rowCol) =>
-            rowCol == this.sumCell || this.arrowCells.Any(i => rowCol == i);
+            rowCol == this.sumCell || this.arrowCells.Contains(rowCol);
 
         public bool IsValidPlacement(ISudokuGrid grid, RowCol rowCol, int value)
         {
