@@ -1,4 +1,6 @@
-﻿using SuperSudoku.Sudoku.Grid;
+﻿using System.Collections.Generic;
+
+using SuperSudoku.Sudoku.Grid;
 
 namespace SuperSudoku.Sudoku.Constraints
 {
@@ -6,6 +8,10 @@ namespace SuperSudoku.Sudoku.Constraints
     {
         bool Validate(ISudokuGrid grid);
 
-        bool IsValid(ISudokuGrid grid, int row, int col, int value);
+        bool IsValidPlacement(ISudokuGrid grid, RowCol rowCol, int value);
+
+        bool AffectsCell(RowCol rowCol);
+
+        IEnumerable<RowCol> AffectedCells();
     }
 }

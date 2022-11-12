@@ -1,49 +1,73 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 using SuperSudoku.Sudoku.Grid;
 
-namespace SuperSudoku.Sudoku.Constraints {
-	public class ArrowConstraint : BaseSudukuConstraint, ISudokuConstraint {
-		public ArrowConstraint() {
-			this.arrowCells = new List<Tuple<int, int>>();
-		}
+namespace SuperSudoku.Sudoku.Constraints
+{
+    public class ArrowConstraint : ISudokuConstraint
+    {
+        private readonly RowCol sumCell;
 
-		public override bool Validate(ISudokuGrid grid) {
-			if (this.sumCell == null) {
-				throw new InvalidOperationException("The sum cell has not been set");
-			}
+        private readonly IEnumerable<RowCol> arrowCells;
 
-			bool arrowComplete = true;
-			int sum = 0;
-			foreach (var cell in this.arrowCells) {
-				if (grid.IsEmpty(cell.Item1, cell.Item2)) {
-					arrowComplete = false;
-				} else {
-					sum += grid.Get(cell.Item1, cell.Item2);
-				}
-			}
+        public ArrowConstraint(RowCol sumCell, IEnumerable<RowCol> arrowCells)
+        {
+            this.sumCell = sumCell ?? throw new ArgumentNullException(nameof(sumCell));
+            this.arrowCells = arrowCells ?? throw new ArgumentNullException(nameof(arrowCells));
+        }
 
-			if (grid.IsEmpty(this.sumCell.Item1, this.sumCell.Item2)) {
-				return sum <= grid.Size;
-			} else {
-				return arrowComplete ? grid.Get(this.sumCell.Item1, this.sumCell.Item2) == sum : grid.Get(this.sumCell.Item1, this.sumCell.Item2) > sum;
-			}
-		}
+        public IEnumerable<RowCol> AffectedCells() =>
+            this.arrowCells.Append(this.sumCell);
 
-		public override bool AffectsCell(ISudokuGrid grid, int row, int col) {
-			Tuple<int, int> cell = new Tuple<int, int>(row, col);
-			return this.sumCell.Equals(cell) || this.arrowCells.Contains(cell);
-		}
+        public bool AffectsCell(RowCol rowCol) =>
+            rowCol == this.sumCell || this.arrowCells.Any(i => rowCol == i);
 
-		public void SetSumCell(int row, int col) =>
-			this.sumCell = new Tuple<int, int>(row, col);
+        public bool IsValidPlacement(ISudokuGrid grid, RowCol rowCol, int value)
+        {
+            if (this.AffectsCell(rowCol)) {
+                if (grid.IsEmpty(rowCol)) {
+                    if (rowCol == this.sumCell) {
+                        return this.GetMaxArrowSum(grid) >= value && this.GetMinArrowSum(grid) <= value;
+                    }
+                    else {
+                        grid.Set(rowCol, value);
+                        int min = this.GetMinArrowSum(grid);
+                        int max = this.GetMaxArrowSum(grid);
 
-		public void AddArrowCell(int row, int col) =>
-			this.arrowCells.Add(new Tuple<int, int>(row, col));
+                        if (grid.IsEmpty(this.sumCell)) {
+                            return min <= grid.Size;
+                        }
+                        else {
+                            int target = grid.Get(this.sumCell);
+                            return min <= target && max >= target;
+                        }
+                    }
+                }
 
-		private readonly List<Tuple<int, int>> arrowCells;
+                return false;
+            }
 
-		private Tuple<int, int> sumCell = null;
-	}
+            return true;
+        }
+
+        public bool Validate(ISudokuGrid grid)
+        {
+            if (grid.IsEmpty(this.sumCell) || this.arrowCells.Any(i => grid.IsEmpty(i))) {
+                return false;
+            }
+
+            return grid.Get(this.sumCell) == this.GetArrowSum(grid);
+        }
+
+        private int GetArrowSum(ISudokuGrid grid) =>
+            this.arrowCells.Sum(i => grid.Get(i));
+
+        private int GetMaxArrowSum(ISudokuGrid grid) =>
+            this.arrowCells.Aggregate(0, (curr, next) => curr + (grid.IsEmpty(next) ? grid.Size : grid.Get(next)));
+
+        private int GetMinArrowSum(ISudokuGrid grid) =>
+            this.arrowCells.Aggregate(0, (curr, next) => curr + (grid.IsEmpty(next) ? 1 : grid.Get(next)));
+    }
 }

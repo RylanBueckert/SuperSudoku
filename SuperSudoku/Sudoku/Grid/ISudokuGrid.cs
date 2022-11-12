@@ -8,19 +8,19 @@ namespace SuperSudoku.Sudoku.Grid
     {
         int Size { get; }
 
-        int Get(int row, int col);
+        int Get(RowCol rowCol);
 
-        void Set(int row, int col, int value);
+        void Set(RowCol rowCol, int value);
 
         void Clear();
 
-        void Clear(int row, int col);
+        void Clear(RowCol rowCol);
 
-        bool IsEmpty(int row, int col);
+        bool IsEmpty(RowCol rowCol);
 
         bool IsValid();
 
-        bool IsValid(int row, int col, int value);
+        bool IsValid(RowCol rowCol, int value);
 
         bool IsSolved();
 

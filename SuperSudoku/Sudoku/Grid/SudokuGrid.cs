@@ -19,60 +19,51 @@ namespace SuperSudoku.Sudoku.Grid
             this.constraints = new List<ISudokuConstraint>();
         }
 
-        public static SudokuGrid CreateDefault()
+        public int Get(RowCol rowCol)
         {
-            var newGrid = new SudokuGrid(9);
-            newGrid.AddConstraint(new RowsConstraint());
-            newGrid.AddConstraint(new ColumnsConstraint());
-            newGrid.AddConstraint(new StandardBoxesConstraint());
-            return newGrid;
+            if (!this.isValidRange(rowCol.Row)) {
+                throw new ArgumentOutOfRangeException(nameof(rowCol.Row));
+            }
+
+            if (!this.isValidRange(rowCol.Col)) {
+                throw new ArgumentOutOfRangeException(nameof(rowCol.Col));
+            }
+
+            return grid[rowCol.Row - 1, rowCol.Col - 1];
         }
 
-        public int Get(int row, int col)
+        public void Set(RowCol rowCol, int value)
         {
-            if (!this.isValidRange(row)) {
-                throw new ArgumentOutOfRangeException(nameof(row));
+            if (!this.isValidRange(rowCol.Row)) {
+                throw new ArgumentOutOfRangeException(nameof(rowCol.Row));
             }
 
-            if (!this.isValidRange(col)) {
-                throw new ArgumentOutOfRangeException(nameof(col));
-            }
-
-            return grid[row - 1, col - 1];
-        }
-
-        public void Set(int row, int col, int value)
-        {
-            if (!this.isValidRange(row)) {
-                throw new ArgumentOutOfRangeException(nameof(row));
-            }
-
-            if (!this.isValidRange(col)) {
-                throw new ArgumentOutOfRangeException(nameof(col));
+            if (!this.isValidRange(rowCol.Col)) {
+                throw new ArgumentOutOfRangeException(nameof(rowCol.Col));
             }
 
             if (!this.isValidRange(value)) {
                 throw new ArgumentOutOfRangeException(nameof(value));
             }
 
-            if (grid[row - 1, col - 1] != EMPTY) {
+            if (grid[rowCol.Row - 1, rowCol.Col - 1] != EMPTY) {
                 throw new InvalidOperationException("The cell is not empty");
             }
 
-            grid[row - 1, col - 1] = value;
+            grid[rowCol.Row - 1, rowCol.Col - 1] = value;
         }
 
-        public void Clear(int row, int col)
+        public void Clear(RowCol rowCol)
         {
-            if (!this.isValidRange(row)) {
-                throw new ArgumentOutOfRangeException(nameof(row));
+            if (!this.isValidRange(rowCol.Row)) {
+                throw new ArgumentOutOfRangeException(nameof(rowCol.Row));
             }
 
-            if (!this.isValidRange(col)) {
-                throw new ArgumentOutOfRangeException(nameof(col));
+            if (!this.isValidRange(rowCol.Col)) {
+                throw new ArgumentOutOfRangeException(nameof(rowCol.Row));
             }
 
-            grid[row - 1, col - 1] = EMPTY;
+            grid[rowCol.Row - 1, rowCol.Col - 1] = EMPTY;
         }
 
         public void Clear()
@@ -84,24 +75,24 @@ namespace SuperSudoku.Sudoku.Grid
             }
         }
 
-        public bool IsEmpty(int row, int col)
+        public bool IsEmpty(RowCol rowCol)
         {
-            if (!this.isValidRange(row)) {
-                throw new ArgumentOutOfRangeException(nameof(row));
+            if (!this.isValidRange(rowCol.Row)) {
+                throw new ArgumentOutOfRangeException(nameof(rowCol.Row));
             }
 
-            if (!this.isValidRange(col)) {
-                throw new ArgumentOutOfRangeException(nameof(col));
+            if (!this.isValidRange(rowCol.Col)) {
+                throw new ArgumentOutOfRangeException(nameof(rowCol.Col));
             }
 
-            return grid[row - 1, col - 1] == EMPTY;
+            return grid[rowCol.Row - 1, rowCol.Col - 1] == EMPTY;
         }
 
         public bool IsValid() =>
             this.constraints.All(i => i.Validate(this));
 
-        public bool IsValid(int row, int col, int value) =>
-            this.constraints.All(i => i.IsValid(this, row, col, value));
+        public bool IsValid(RowCol rowCol, int value) =>
+            this.constraints.All(i => i.IsValidPlacement(this, rowCol, value));
 
         public bool IsSolved() =>
             this.grid.ToEnumerable().All(i => i != EMPTY) &&
@@ -119,7 +110,7 @@ namespace SuperSudoku.Sudoku.Grid
 
             for (int i = 1; i <= this.Size; i++) {
                 for (int j = 1; j <= this.Size; j++) {
-                    int cellValue = this.Get(i, j);
+                    int cellValue = this.Get((i, j));
 
                     stringBuilder.Append(cellValue > 0 ? cellValue.ToString() : " ");
 

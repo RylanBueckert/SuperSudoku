@@ -3,6 +3,7 @@ using System.Diagnostics;
 using System.Windows.Forms;
 
 using SuperSudoku.Parser;
+using SuperSudoku.Sudoku.Constraints;
 using SuperSudoku.Sudoku.Grid;
 
 namespace SuperSudoku
@@ -18,14 +19,15 @@ namespace SuperSudoku
                 dlg.Filter = "JSON files (*.json)|*.json";
                 if (dlg.ShowDialog() == DialogResult.OK) {
                     filepath = dlg.FileName;
-                } else {
+                }
+                else {
                     return;
                 }
             }
 
             ISudokuParser parser = new SudokuJsonParser();
 
-            SudokuGrid grid = parser.Parse(filepath);
+            ISudokuGrid grid = parser.Parse(filepath);
 
 
             //string filename = Console.ReadLine();

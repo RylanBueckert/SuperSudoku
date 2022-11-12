@@ -1,27 +1,34 @@
-﻿using SuperSudoku.Sudoku.Grid;
+﻿//using System.Collections.Generic;
 
-namespace SuperSudoku.Sudoku.Constraints
-{
-    public abstract class BaseSudukuConstraint : ISudokuConstraint
-    {
-        public abstract bool Validate(ISudokuGrid grid);
+//using SuperSudoku.Sudoku.Grid;
 
-        public virtual bool IsValid(ISudokuGrid grid, int row, int col, int value)
-        {
-            if (this.AffectsCell(grid, row, col)) {
-                //if (grid.Set(row, col, value)) {
-                //    bool result = this.Validate(grid);
-                //    grid.Clear(row, col);
-                //    return result;
-                //}
+//namespace SuperSudoku.Sudoku.Constraints
+//{
+//    public abstract class BaseSudukuConstraint : ISudokuConstraint
+//    {
+//        public abstract bool Validate(ISudokuGrid grid);
 
-                return false;
-            }
+//        public virtual bool IsValidPlacement(ISudokuGrid grid, RowCol rowCol, int value)
+//        {
+//            if (!grid.IsEmpty()) {
+//                return false;
+//            }
 
-            return true;
-        }
+//            if (this.AffectsCell(rowCol)) {
+//                //if (grid.Set(row, col, value)) {
+//                //    bool result = this.Validate(grid);
+//                //    grid.Clear(row, col);
+//                //    return result;
+//                //}
 
-        public virtual bool AffectsCell(ISudokuGrid grid, int row, int col) =>
-            true;
-    }
-}
+//                return false;
+//            }
+
+//            return true;
+//        }
+
+//        public abstract bool AffectsCell(RowCol rowCol);
+
+//        public abstract IEnumerable<RowCol> AffectedCells();
+//    }
+//}
