@@ -65,6 +65,9 @@ namespace SuperSudoku.Parser
                     case "REGIONS":
                         HandleRegionRule(rule, sudokuGrid);
                         break;
+                    case "DIAGANAL":
+                        HandleDiaganalRule(rule, sudokuGrid);
+                        break;
                     default:
                         throw new NotSupportedException($"Unknown rule: {ruleName}");
                 }
@@ -99,6 +102,14 @@ namespace SuperSudoku.Parser
             regions.ForEach(i => {
                 sudokuGrid.AddConstraint(new RegionConstraint(i.Value));
             });
+        }
+
+        private static void HandleDiaganalRule(JToken rule, SudokuGrid sudokuGrid)
+        {
+            bool negativeDiag = rule["/"].Value<bool>();
+            bool positiveDiag = rule["\\"].Value<bool>();
+
+            sudokuGrid.AddConstraint(new DiagonalConstraint(sudokuGrid.Size, positiveDiag, negativeDiag));
         }
 
         private static void HandleGridArray(JToken json, SudokuGrid sudokuGrid, Action<int, int, char> action)
