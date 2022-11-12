@@ -1,78 +1,71 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 
 using SuperSudoku.Sudoku;
 using SuperSudoku.Sudoku.Grid;
+using SuperSudoku.Utliity.Extentions;
 
 namespace SuperSudoku.Solver
 {
     public class SudokuSolver : ISudokuSolver
     {
-        public bool Solve(ISudokuGrid grid)
-        {
-            RowCol? startCell = NextCell(grid);
-            if (startCell.HasValue) {
-                return Solve(grid, startCell.Value, true);
-            }
+        public bool DoPrint { get; set; }
 
-            // No Empty cells, check if correct
-            return grid.IsSolved();
+        public SudokuSolver(bool print = false)
+        {
+            this.DoPrint = print;
         }
 
-        private static bool Solve(ISudokuGrid grid, RowCol rowCol, bool print)
+        public bool Solve(ISudokuGrid grid)
         {
-            if (print) {
+            if (this.DoPrint) {
                 Console.WriteLine(grid);
             }
 
-            for (int i = 1; i <= grid.Size; i++) {
-                if (grid.IsValid(rowCol, i)) {
-                    grid.Set(rowCol, i);
+            (RowCol? rowCol, var candidates) = NextCell(grid);
 
-                    RowCol? nextCell = NextCell(grid);
-                    if (!nextCell.HasValue) {
-                        // Puzzle Finished
-                        return grid.IsSolved();
-                    }
+            if (rowCol.HasValue) {
 
-                    if (Solve(grid, nextCell.Value, print)) {
+                foreach (int val in candidates) {
+                    grid.Set(rowCol.Value, val);
+
+                    if (Solve(grid)) {
                         return true;
                     }
 
-                    grid.Clear(rowCol);
+                    grid.Clear(rowCol.Value);
                 }
             }
 
-            return false;
+            return grid.IsSolved();
         }
 
-        private static RowCol? NextCell(ISudokuGrid grid)
+        private static (RowCol?, IEnumerable<int>) NextCell(ISudokuGrid grid)
         {
             RowCol? bestCell = null;
+            IEnumerable<int> bestCellCandidates = null;
 
-            int bestRestriction = -1;
+            int bestRestriction = grid.Size + 1;
 
             for (int row = 1; row <= grid.Size; row++) {
                 for (RowCol currentCell = (row, 1); currentCell.Col <= grid.Size; currentCell = (row, currentCell.Col + 1)) {
 
                     if (grid.IsEmpty(currentCell)) {
 
-                        int currentRestriction = 0;
-                        for (int val = 1; val <= grid.Size; val++) {
-                            if (!grid.IsValid(currentCell, val)) {
-                                currentRestriction++;
-                            }
-                        }
+                        List<int> currentCandidates = Enumerable.Range(1, grid.Size).Where(val => grid.IsValid(currentCell, val)).ToList();
+                        int currentRestriction = currentCandidates.Count;
 
-                        if (currentRestriction > bestRestriction) {
+                        if (currentRestriction < bestRestriction) {
                             bestRestriction = currentRestriction;
                             bestCell = currentCell;
+                            bestCellCandidates = currentCandidates;
                         }
                     }
                 }
             }
 
-            return bestCell;
+            return (bestCell, bestCellCandidates);
         }
     }
 }

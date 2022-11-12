@@ -29,7 +29,7 @@ namespace SuperSudoku
 
             ISudokuGrid grid = parser.Parse(filepath);
 
-            ISudokuSolver solver = new SudokuSolver();
+            ISudokuSolver solver = new SudokuSolver(true);
             Console.WriteLine(grid);
             TimeSpan duration = Time(() => solver.Solve(grid));
             Console.WriteLine(grid);
