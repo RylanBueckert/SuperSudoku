@@ -71,6 +71,12 @@ namespace SuperSudoku.Parser
                     case "KILLER":
                         HandleKillerRule(rule, sudokuGrid);
                         break;
+                    case "ANTIKING":
+                        sudokuGrid.AddConstraint(new AntiKingConstraint(sudokuGrid.Size));
+                        break;
+                    case "ANTIKNIGHT":
+                        sudokuGrid.AddConstraint(new AntiKnightConstraint(sudokuGrid.Size));
+                        break;
                     default:
                         throw new NotSupportedException($"Unknown rule: {ruleName}");
                 }

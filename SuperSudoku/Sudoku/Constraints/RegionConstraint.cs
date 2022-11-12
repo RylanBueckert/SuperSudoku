@@ -29,6 +29,11 @@ namespace SuperSudoku.Sudoku.Constraints
         public virtual bool IsValidPlacement(ISudokuGrid grid, RowCol rowCol, int value)
         {
             if (this.AffectsCell(rowCol)) {
+                if (this.cells.Count > grid.Size) {
+                    // Invalid region. Cannot be filled in a valid way.
+                    return false;
+                }
+
                 return this.cells.All(i => grid.Get(i) != value || i == rowCol);
             }
 

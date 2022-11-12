@@ -9,13 +9,13 @@ namespace SuperSudoku.Sudoku.Constraints
     {
         private readonly List<ISudokuConstraint> subConstraints;
 
-        public StandardConstraint(int size)
+        public StandardConstraint(int gridSize)
         {
             this.subConstraints = new List<ISudokuConstraint>
             {
-                new RowsConstraint(size),
-                new ColumnsConstraint(size),
-                new BoxesConstraint(size)
+                new RowsConstraint(gridSize),
+                new ColumnsConstraint(gridSize),
+                new BoxesConstraint(gridSize)
             };
         }
 

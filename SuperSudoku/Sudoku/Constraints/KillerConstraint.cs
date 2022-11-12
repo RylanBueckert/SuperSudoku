@@ -50,10 +50,22 @@ namespace SuperSudoku.Sudoku.Constraints
         private int GetCurrentSum(ISudokuGrid grid) =>
             this.cells.Sum(grid.Get);
 
-        private int GetMaxPossibleSum(ISudokuGrid grid) =>
-            this.cells.Aggregate(0, (curr, next) => curr + (grid.IsEmpty(next) ? grid.Size : grid.Get(next)));
+        private int GetMaxPossibleSum(ISudokuGrid grid)
+        {
+            var availble = Enumerable.Range(1, grid.Size).ToList();
+            this.cells.Where(i => !grid.IsEmpty(i)).Select(grid.Get).Where(i => i != SudokuGrid.EMPTY).ForEach(i => availble.Remove(i));
+            int idx = availble.Count - 1;
 
-        private int GetMinPossibleSum(ISudokuGrid grid) =>
-            this.cells.Aggregate(0, (curr, next) => curr + (grid.IsEmpty(next) ? 1 : grid.Get(next)));
+            return this.cells.Aggregate(0, (curr, next) => curr + (grid.IsEmpty(next) ? availble[idx--] : grid.Get(next)));
+        }
+
+        private int GetMinPossibleSum(ISudokuGrid grid)
+        {
+            var availble = Enumerable.Range(1, grid.Size).ToList();
+            this.cells.Where(i => !grid.IsEmpty(i)).Select(grid.Get).Where(i => i != SudokuGrid.EMPTY).ForEach(i => availble.Remove(i));
+            int idx = 0;
+
+            return this.cells.Aggregate(0, (curr, next) => curr + (grid.IsEmpty(next) ? availble[idx++] : grid.Get(next)));
+        }
     }
 }

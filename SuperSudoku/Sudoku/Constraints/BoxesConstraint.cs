@@ -11,11 +11,11 @@ namespace SuperSudoku.Sudoku.Constraints
     {
         private readonly List<RegionConstraint> boxes;
 
-        public BoxesConstraint(int size)
+        public BoxesConstraint(int gridSize)
         {
             this.boxes = new List<RegionConstraint>();
 
-            switch (size) {
+            switch (gridSize) {
                 case 9:
                     GenerateBoxConstraints(3, 3, 3, 3).ForEach(this.boxes.Add);
                     break;

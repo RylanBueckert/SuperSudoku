@@ -10,16 +10,16 @@ namespace SuperSudoku.Sudoku.Constraints
     {
         private readonly List<RegionConstraint> diagonals;
 
-        public DiagonalConstraint(int size, bool hasPositiveDiag, bool hasNegativeDiag)
+        public DiagonalConstraint(int gridSize, bool hasPositiveDiag, bool hasNegativeDiag)
         {
             this.diagonals = new List<RegionConstraint>();
 
             if (hasPositiveDiag) {
-                this.diagonals.Add(new RegionConstraint(Enumerable.Range(1, size).Select(i => new RowCol(i, i))));
+                this.diagonals.Add(new RegionConstraint(Enumerable.Range(1, gridSize).Select(i => new RowCol(i, i))));
             }
 
             if (hasNegativeDiag) {
-                this.diagonals.Add(new RegionConstraint(Enumerable.Range(1, size).Select(i => new RowCol(size + 1 - i, i))));
+                this.diagonals.Add(new RegionConstraint(Enumerable.Range(1, gridSize).Select(i => new RowCol(gridSize + 1 - i, i))));
             }
         }
 

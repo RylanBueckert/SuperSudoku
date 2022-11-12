@@ -9,10 +9,10 @@ namespace SuperSudoku.Sudoku.Constraints
     {
         private readonly List<RegionConstraint> columns;
 
-        public ColumnsConstraint(int size)
+        public ColumnsConstraint(int gridSize)
         {
-            this.columns = Enumerable.Range(1, size)
-                                     .Select(col => new RegionConstraint(Enumerable.Range(1, size).Select(row => new RowCol(row, col))))
+            this.columns = Enumerable.Range(1, gridSize)
+                                     .Select(col => new RegionConstraint(Enumerable.Range(1, gridSize).Select(row => new RowCol(row, col))))
                                      .ToList();
         }
 

@@ -14,9 +14,7 @@
     ".5..3..2."
   ],
   "Rules": [
-    {
-      "Name": "Standard"
-    },
+    { "Name": "Standard" },
     {
       "Name": "Diaganal",
       "\\": true,
