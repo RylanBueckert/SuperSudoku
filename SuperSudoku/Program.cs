@@ -3,7 +3,7 @@ using System.Diagnostics;
 using System.Windows.Forms;
 
 using SuperSudoku.Parser;
-using SuperSudoku.Sudoku.Constraints;
+using SuperSudoku.Solver;
 using SuperSudoku.Sudoku.Grid;
 
 namespace SuperSudoku
@@ -29,13 +29,11 @@ namespace SuperSudoku
 
             ISudokuGrid grid = parser.Parse(filepath);
 
-
-            //string filename = Console.ReadLine();
-            //ISudokuSolver solver = new SudokuSolver();
-            //Console.WriteLine(grid);
-            //TimeSpan duration = Time(() => solver.Solve(grid));
-            //Console.WriteLine(grid);
-            //Console.WriteLine(duration.TotalMilliseconds);
+            ISudokuSolver solver = new SudokuSolver();
+            Console.WriteLine(grid);
+            TimeSpan duration = Time(() => solver.Solve(grid));
+            Console.WriteLine(grid);
+            Console.WriteLine(duration.TotalMilliseconds);
         }
 
         public static TimeSpan Time(Func<bool> action)

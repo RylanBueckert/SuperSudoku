@@ -4,6 +4,6 @@ namespace SuperSudoku.Solver
 {
     public interface ISudokuSolver
     {
-        bool Solve(SudokuGrid grid);
+        bool Solve(ISudokuGrid grid);
     }
 }

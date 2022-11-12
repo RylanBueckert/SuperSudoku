@@ -26,7 +26,7 @@ namespace SuperSudoku.Sudoku.Constraints
         {
             if (this.AffectsCell(rowCol)) {
                 if (grid.IsEmpty(rowCol)) {
-                    return this.cells.All(i => grid.Get(rowCol) != value);
+                    return this.cells.All(i => grid.Get(i) != value);
                 }
 
                 return false;

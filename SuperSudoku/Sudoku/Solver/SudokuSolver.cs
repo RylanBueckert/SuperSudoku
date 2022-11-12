@@ -1,80 +1,84 @@
 ﻿using System;
+using System.Linq;
 
+using SuperSudoku.Sudoku;
 using SuperSudoku.Sudoku.Grid;
 
 namespace SuperSudoku.Solver
 {
     public class SudokuSolver : ISudokuSolver
     {
-        public bool Solve(SudokuGrid grid)
+        public bool Solve(ISudokuGrid grid)
         {
-            int col;
-            //if (NextCell(grid, out int row, out col)) {
-            //    return Solve(grid, row, col);
-            //}
+            RowCol startCell = NextCell(grid);
+            if (startCell != null) {
+                return Solve(grid, startCell, true);
+            }
 
-            return true;
+            // No Empty cells, check if correct
+            return grid.IsSolved();
         }
 
-        private static bool Solve(SudokuGrid grid, int row, int col)
+        private static bool Solve(ISudokuGrid grid, RowCol rowCol, bool print)
         {
-            Console.WriteLine(grid);
+            if (print) {
+                Console.WriteLine(grid);
+            }
 
-            //for (int i = 1; i <= grid.Size; i++) {
-            //    if (grid.IsValid(row, col, i)) {
-            //        grid.Set(row, col, i);
+            for (int i = 1; i <= grid.Size; i++) {
+                if (grid.IsValid(rowCol, i)) {
+                    grid.Set(rowCol, i);
 
-            //        if (!NextCell(grid, out int nextRow, out int nextCol)) {
-            //            // Puzzle Solved
-            //            return true;
-            //        }
+                    RowCol nextCell = NextCell(grid);
+                    if (nextCell == null) {
+                        // Puzzle Finished
+                        return grid.IsSolved();
+                    }
 
-            //        if (Solve(grid, nextRow, nextCol)) {
-            //            return true;
-            //        }
+                    if (Solve(grid, nextCell, print)) {
+                        return true;
+                    }
 
-            //        grid.Clear(row, col);
-            //    }
-            //}
+                    grid.Clear(rowCol);
+                }
+            }
 
             return false;
         }
 
-        //private static bool NextCell(SudokuGrid grid, out int row, out int col)
-        //{
-        //    //row = 0;
-        //    //col = 0;
+        private static RowCol NextCell(ISudokuGrid grid)
+        {
+            RowCol bestCell = null;
 
-        //    //int bestRestriction = -1;
-        //    //int bestConstraints = 0;
+            int bestRestriction = -1;
+            int bestConstraints = 0;
 
-        //    //for (int i = 1; i <= grid.Size; i++) {
-        //    //    for (int j = 1; j <= grid.Size; j++) {
+            for (int row = 1; row <= grid.Size; row++) {
+                for (RowCol currentCell = (row, 1); currentCell.Col <= grid.Size; currentCell = (row, currentCell.Col + 1)) {
 
-        //    //        if (grid.IsEmpty(i, j)) {
+                    if (grid.IsEmpty(currentCell)) {
 
-        //    //            int currentRestriction = 0;
-        //    //            for (int val = 1; val <= grid.Size; val++) {
-        //    //                if (!grid.IsValid(i, j, val)) {
-        //    //                    currentRestriction++;
-        //    //                }
-        //    //            }
+                        int currentRestriction = 0;
+                        for (int val = 1; val <= grid.Size; val++) {
+                            if (!grid.IsValid(currentCell, val)) {
+                                currentRestriction++;
+                            }
+                        }
 
-        //    //            if (currentRestriction >= bestRestriction) {
-        //    //                int currentConstraints = grid.Constraints().Aggregate(0, (sum, c) => sum += c.AffectsCell(grid, i, j) ? 1 : 0);
+                        if (currentRestriction >= bestRestriction) {
+                            int currentConstraints = grid.Constraints().Sum(c => c.AffectsCell(currentCell) ? 1 : 0);
 
-        //    //                if (currentRestriction > bestRestriction || currentConstraints > bestConstraints) {
-        //    //                    bestRestriction = currentRestriction;
-        //    //                    bestConstraints = currentConstraints;
-        //    //                    row = i;
-        //    //                    col = j;
-        //    //                }
-        //    //            }
-        //    //        }
-        //    //    }
-        //    //}
+                            if (currentRestriction > bestRestriction || currentConstraints > bestConstraints) {
+                                bestRestriction = currentRestriction;
+                                bestConstraints = currentConstraints;
+                                bestCell = currentCell;
+                            }
+                        }
+                    }
+                }
+            }
 
-        //    //return bestRestriction > -1;
-        //}
+            return bestCell;
+        }
     }
 }

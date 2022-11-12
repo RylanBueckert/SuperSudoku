@@ -35,6 +35,7 @@ namespace SuperSudoku.Sudoku.Constraints
                         grid.Set(rowCol, value);
                         int min = this.GetMinArrowSum(grid);
                         int max = this.GetMaxArrowSum(grid);
+                        grid.Clear(rowCol);
 
                         if (grid.IsEmpty(this.sumCell)) {
                             return min <= grid.Size;

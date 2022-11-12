@@ -18,14 +18,12 @@ namespace SuperSudoku.Sudoku.Grid
 
         bool IsEmpty(RowCol rowCol);
 
-        bool IsValid();
+        bool IsSolved();
 
         bool IsValid(RowCol rowCol, int value);
 
-        bool IsSolved();
-
         void AddConstraint(ISudokuConstraint constraint);
 
-        IReadOnlyCollection<ISudokuConstraint> Constraints();
+        IEnumerable<ISudokuConstraint> Constraints();
     }
 }
