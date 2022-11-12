@@ -74,8 +74,8 @@ namespace SuperSudoku.Parser
         private static void HandleArrowRule(JToken rule, SudokuGrid sudokuGrid)
         {
             rule["Data"].Children().ForEach(arrowRule => {
-                RowCol sum = arrowRule["Sum"].Values<int>().ToArray().Map(i => (RowCol)(i[0], i[1]));
-                IEnumerable<RowCol> arrow = arrowRule["Arrow"].Select(i => i.Values<int>().ToArray().Map(j => (RowCol)(j[0], j[1])));
+                RowCol sum = arrowRule["Sum"].Values<int>().ToArray().Map(i => new RowCol(i[0], i[1]));
+                IEnumerable<RowCol> arrow = arrowRule["Arrow"].Select(i => i.Values<int>().ToArray().Map(j => new RowCol(j[0], j[1])));
 
                 sudokuGrid.AddConstraint(new ArrowConstraint(sum, arrow));
             });

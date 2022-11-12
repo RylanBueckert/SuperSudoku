@@ -17,12 +17,12 @@ namespace SuperSudoku.Sudoku.Constraints
 
         public static void AddRowsConstraints(this ISudokuGrid grid) =>
             Enumerable.Range(1, grid.Size)
-                      .Select(row => new RegionConstraint(Enumerable.Range(1, grid.Size).Select(col => (RowCol)(row, col))))
+                      .Select(row => new RegionConstraint(Enumerable.Range(1, grid.Size).Select(col => new RowCol(row, col))))
                       .ForEach(grid.AddConstraint);
 
         public static void AddColumnsConstraints(ISudokuGrid grid) =>
             Enumerable.Range(1, grid.Size)
-                      .Select(col => new RegionConstraint(Enumerable.Range(1, grid.Size).Select(row => (RowCol)(row, col))))
+                      .Select(col => new RegionConstraint(Enumerable.Range(1, grid.Size).Select(row => new RowCol(row, col))))
                       .ForEach(grid.AddConstraint);
 
         public static void AddStandardBoxConstraints(this ISudokuGrid grid)
@@ -42,17 +42,17 @@ namespace SuperSudoku.Sudoku.Constraints
 
         public static void AddDiaganalTLBRConstraint(this ISudokuGrid grid) =>
             Enumerable.Range(1, grid.Size)
-                      .Select(i => new RegionConstraint(Enumerable.Range(1, grid.Size).Select(_ => (RowCol)(i, i))))
+                      .Select(i => new RegionConstraint(Enumerable.Range(1, grid.Size).Select(_ => new RowCol(i, i))))
                       .ForEach(grid.AddConstraint);
 
         public static void AddDiaganalBLTRConstraint(this ISudokuGrid grid) =>
             Enumerable.Range(1, grid.Size)
-                      .Select(i => new RegionConstraint(Enumerable.Range(1, grid.Size).Select(_ => (RowCol)(grid.Size + 1 - i, i))))
+                      .Select(i => new RegionConstraint(Enumerable.Range(1, grid.Size).Select(_ => new RowCol(grid.Size + 1 - i, i))))
                       .ForEach(grid.AddConstraint);
 
         private static IEnumerable<ISudokuConstraint> GenerateBoxConstraints(int boxRows, int boxColumns, int rowsInBox, int columnsInBox) =>
             Enumerable.Range(0, boxRows).SelectMany(i => Enumerable.Range(0, boxColumns).Select(j =>
                 new RegionConstraint(Enumerable.Range(1, rowsInBox).SelectMany(row => Enumerable.Range(1, columnsInBox).Select(col =>
-                    (RowCol)(i * rowsInBox + row, j * columnsInBox + col))))));
+                    new RowCol(i * rowsInBox + row, j * columnsInBox + col))))));
     }
 }
