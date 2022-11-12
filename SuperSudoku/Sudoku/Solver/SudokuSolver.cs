@@ -30,7 +30,7 @@ namespace SuperSudoku.Solver
                 foreach (int val in candidates) {
                     grid.Set(rowCol.Value, val);
 
-                    if (Solve(grid)) {
+                    if (this.Solve(grid)) {
                         return true;
                     }
 
