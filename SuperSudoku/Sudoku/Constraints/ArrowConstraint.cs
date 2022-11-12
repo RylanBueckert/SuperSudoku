@@ -15,7 +15,7 @@ namespace SuperSudoku.Sudoku.Constraints
         public ArrowConstraint(RowCol sumCell, IEnumerable<RowCol> arrowCells)
         {
             this.sumCell = sumCell;
-            this.arrowCells = arrowCells.ThrowArgIfNull(nameof(arrowCells)).Where(i => i != null).ToHashSet();
+            this.arrowCells = arrowCells.ThrowArgIfNull(nameof(arrowCells)).ToHashSet();
         }
 
         public IEnumerable<RowCol> AffectedCells() =>
