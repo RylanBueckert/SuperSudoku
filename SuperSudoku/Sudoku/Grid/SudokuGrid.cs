@@ -11,9 +11,7 @@ namespace SuperSudoku.Sudoku.Grid
     public class SudokuGrid : ISudokuGrid
     {
         private const int EMPTY = 0;
-
         private readonly int[,] grid;
-
         private readonly List<ISudokuConstraint> constraints;
 
         public SudokuGrid(int size)

@@ -57,7 +57,7 @@ namespace SuperSudoku.Parser
 
                 switch (ruleName.ToUpperInvariant()) {
                     case "STANDARD":
-                        sudokuGrid.AddNormalSudokuConstraints();
+                        sudokuGrid.AddConstraint(new StandardConstraint(sudokuGrid.Size));
                         break;
                     case "ARROW":
                         HandleArrowRule(rule, sudokuGrid);

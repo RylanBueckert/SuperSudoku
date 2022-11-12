@@ -51,7 +51,6 @@ namespace SuperSudoku.Solver
             RowCol? bestCell = null;
 
             int bestRestriction = -1;
-            int bestConstraints = 0;
 
             for (int row = 1; row <= grid.Size; row++) {
                 for (RowCol currentCell = (row, 1); currentCell.Col <= grid.Size; currentCell = (row, currentCell.Col + 1)) {
@@ -65,14 +64,9 @@ namespace SuperSudoku.Solver
                             }
                         }
 
-                        if (currentRestriction >= bestRestriction) {
-                            int currentConstraints = grid.Constraints().Sum(c => c.AffectsCell(currentCell) ? 1 : 0);
-
-                            if (currentRestriction > bestRestriction || currentConstraints > bestConstraints) {
-                                bestRestriction = currentRestriction;
-                                bestConstraints = currentConstraints;
-                                bestCell = currentCell;
-                            }
+                        if (currentRestriction > bestRestriction) {
+                            bestRestriction = currentRestriction;
+                            bestCell = currentCell;
                         }
                     }
                 }

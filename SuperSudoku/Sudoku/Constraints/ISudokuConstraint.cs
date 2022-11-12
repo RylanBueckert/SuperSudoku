@@ -10,8 +10,6 @@ namespace SuperSudoku.Sudoku.Constraints
 
         bool IsValidPlacement(ISudokuGrid grid, RowCol rowCol, int value);
 
-        bool AffectsCell(RowCol rowCol);
-
-        IEnumerable<RowCol> AffectedCells();
+        IEnumerable<RowCol> AffectedCells(RowCol rowCol);
     }
 }

@@ -17,20 +17,19 @@ namespace SuperSudoku.Sudoku.Constraints
             this.cells = cells.ToHashSet();
         }
 
-        public IEnumerable<RowCol> AffectedCells() =>
-            this.cells;
+        public IEnumerable<RowCol> AffectedCells(RowCol rowCol)
+        {
+            if (this.AffectsCell(rowCol)) {
+                return this.cells;
+            }
 
-        public bool AffectsCell(RowCol rowCol) =>
-            this.cells.Contains(rowCol);
+            return Enumerable.Empty<RowCol>();
+        }
 
         public bool IsValidPlacement(ISudokuGrid grid, RowCol rowCol, int value)
         {
             if (this.AffectsCell(rowCol)) {
-                if (grid.IsEmpty(rowCol)) {
-                    return this.cells.All(i => grid.Get(i) != value);
-                }
-
-                return false;
+                return this.cells.All(i => grid.Get(i) != value || i == rowCol);
             }
 
             return true;
@@ -38,5 +37,8 @@ namespace SuperSudoku.Sudoku.Constraints
 
         public bool Validate(ISudokuGrid grid) =>
             !this.cells.Select(grid.Get).HasDuplicates();
+
+        private bool AffectsCell(RowCol rowCol) =>
+            this.cells.Contains(rowCol);
     }
 }

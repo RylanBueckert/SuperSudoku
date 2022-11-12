@@ -9,7 +9,6 @@ namespace SuperSudoku.Sudoku.Constraints
     public class ArrowConstraint : ISudokuConstraint
     {
         private readonly RowCol sumCell;
-
         private readonly HashSet<RowCol> arrowCells;
 
         public ArrowConstraint(RowCol sumCell, IEnumerable<RowCol> arrowCells)
@@ -18,11 +17,14 @@ namespace SuperSudoku.Sudoku.Constraints
             this.arrowCells = arrowCells.ThrowArgIfNull(nameof(arrowCells)).ToHashSet();
         }
 
-        public IEnumerable<RowCol> AffectedCells() =>
-            this.arrowCells.Append(this.sumCell);
+        public IEnumerable<RowCol> AffectedCells(RowCol rowCol)
+        {
+            if (this.AffectsCell(rowCol)) {
+                return this.arrowCells.Append(this.sumCell);
+            }
 
-        public bool AffectsCell(RowCol rowCol) =>
-            rowCol == this.sumCell || this.arrowCells.Contains(rowCol);
+            return Enumerable.Empty<RowCol>();
+        }
 
         public bool IsValidPlacement(ISudokuGrid grid, RowCol rowCol, int value)
         {
@@ -62,8 +64,11 @@ namespace SuperSudoku.Sudoku.Constraints
             return grid.Get(this.sumCell) == this.GetArrowSum(grid);
         }
 
+        private bool AffectsCell(RowCol rowCol) =>
+            rowCol == this.sumCell || this.arrowCells.Contains(rowCol);
+
         private int GetArrowSum(ISudokuGrid grid) =>
-            this.arrowCells.Sum(i => grid.Get(i));
+            this.arrowCells.Sum(grid.Get);
 
         private int GetMaxArrowSum(ISudokuGrid grid) =>
             this.arrowCells.Aggregate(0, (curr, next) => curr + (grid.IsEmpty(next) ? grid.Size : grid.Get(next)));
