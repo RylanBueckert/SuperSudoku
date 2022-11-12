@@ -10,9 +10,9 @@ namespace SuperSudoku.Solver
     {
         public bool Solve(ISudokuGrid grid)
         {
-            RowCol startCell = NextCell(grid);
-            if (startCell != null) {
-                return Solve(grid, startCell, true);
+            RowCol? startCell = NextCell(grid);
+            if (startCell.HasValue) {
+                return Solve(grid, startCell.Value, true);
             }
 
             // No Empty cells, check if correct
@@ -29,13 +29,13 @@ namespace SuperSudoku.Solver
                 if (grid.IsValid(rowCol, i)) {
                     grid.Set(rowCol, i);
 
-                    RowCol nextCell = NextCell(grid);
-                    if (nextCell == null) {
+                    RowCol? nextCell = NextCell(grid);
+                    if (!nextCell.HasValue) {
                         // Puzzle Finished
                         return grid.IsSolved();
                     }
 
-                    if (Solve(grid, nextCell, print)) {
+                    if (Solve(grid, nextCell.Value, print)) {
                         return true;
                     }
 
@@ -46,9 +46,9 @@ namespace SuperSudoku.Solver
             return false;
         }
 
-        private static RowCol NextCell(ISudokuGrid grid)
+        private static RowCol? NextCell(ISudokuGrid grid)
         {
-            RowCol bestCell = null;
+            RowCol? bestCell = null;
 
             int bestRestriction = -1;
             int bestConstraints = 0;

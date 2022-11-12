@@ -1,6 +1,6 @@
 ﻿namespace SuperSudoku.Sudoku
 {
-    public class RowCol
+    public struct RowCol
     {
         public int Row { get; }
 
@@ -18,7 +18,7 @@
         }
 
         public override bool Equals(object obj) =>
-            obj is RowCol && this.Equals((RowCol)obj);
+            obj is RowCol rowCol && this.Equals(rowCol);
 
         public bool Equals(RowCol other) =>
             this.Row == other.Row && this.Col == other.Col;

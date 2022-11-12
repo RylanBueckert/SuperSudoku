@@ -14,7 +14,7 @@ namespace SuperSudoku.Sudoku.Constraints
         {
             cells.ThrowArgIfNull(nameof(cells));
 
-            this.cells = cells.Where(i => i != null).ToHashSet();
+            this.cells = cells.ToHashSet();
         }
 
         public IEnumerable<RowCol> AffectedCells() =>

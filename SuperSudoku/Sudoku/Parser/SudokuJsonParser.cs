@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 
@@ -17,37 +18,40 @@ namespace SuperSudoku.Parser
     {
         public ISudokuGrid Parse(string path)
         {
+            JObject json = ParseJson(path);
+            int size = json.Value<int>("Size");
+            SudokuGrid sudokuGrid = new SudokuGrid(size);
+            SetGivenDigits(json, sudokuGrid);
+            SetupRules(json, sudokuGrid);
+
+            return sudokuGrid;
+        }
+
+        private static JObject ParseJson(string path)
+        {
             if (!File.Exists(path)) {
                 throw new FileNotFoundException($"File {path} could not be found");
             }
-            JObject json = JObject.Parse(File.ReadAllText(path));
 
-            int size = json.Value<int>("Size");
-            string[] given = json["GivenDigits"].Children().Select(i => i.Value<string>()).ToArray();
-            IEnumerable<JToken> rules = json["Rules"].Children();
+            return JObject.Parse(File.ReadAllText(path));
+        }
 
-            SudokuGrid sudokuGrid = new SudokuGrid(size);
-
-            // Grid starting digits
-            if (given.Length != sudokuGrid.Size || given.Any(i => i.Length != sudokuGrid.Size)) {
-                throw new InvalidDataException("Given digits are not in a valid format");
-            }
-
-            for (int i = 1; i <= sudokuGrid.Size; i++) {
-                for (int j = 1; j <= sudokuGrid.Size; j++) {
-                    char c = given[i - 1][j - 1];
-
-                    if (!(char.IsDigit(c) || c == '.')) {
-                        throw new InvalidDataException($"{c} is not a valid digit");
-                    }
-
-                    if (char.IsDigit(c)) {
-                        sudokuGrid.Set((i, j), int.Parse(c.ToString()));
-                    }
+        private static void SetGivenDigits(JToken json, SudokuGrid sudokuGrid)
+        {
+            HandleGridArray(json["GivenDigits"], sudokuGrid, (row, col, c) => {
+                if (!(char.IsDigit(c) || c == '.')) {
+                    throw new InvalidDataException($"{c} is not a valid digit");
                 }
-            }
 
-            // Setup rules
+                if (char.IsDigit(c)) {
+                    sudokuGrid.Set((row, col), int.Parse(c.ToString()));
+                }
+            });
+        }
+
+        private static void SetupRules(JToken json, SudokuGrid sudokuGrid)
+        {
+            IEnumerable<JToken> rules = json["Rules"].Children();
             rules.ForEach(rule => {
                 string ruleName = rule.Value<string>("Name");
 
@@ -55,22 +59,60 @@ namespace SuperSudoku.Parser
                     case "STANDARD":
                         sudokuGrid.AddNormalSudokuConstraints();
                         break;
-
                     case "ARROW":
-                        rule["Data"].Children().ForEach(arrowRule => {
-                            RowCol sum = arrowRule["Sum"].Values<int>().ToArray().Map(i => (RowCol)(i[0], i[1]));
-                            IEnumerable<RowCol> arrow = arrowRule["Arrow"].Select(i => i.Values<int>().ToArray().Map(j => (RowCol)(j[0], j[1])));
-
-                            sudokuGrid.AddConstraint(new ArrowConstraint(sum, arrow));
-                        });
+                        HandleArrowRule(rule, sudokuGrid);
                         break;
-
+                    case "REGIONS":
+                        HandleRegionRule(rule, sudokuGrid);
+                        break;
                     default:
-                        throw new InvalidDataException($"Unknown rule: {ruleName}");
+                        throw new NotSupportedException($"Unknown rule: {ruleName}");
+                }
+            });
+        }
+
+        private static void HandleArrowRule(JToken rule, SudokuGrid sudokuGrid)
+        {
+            rule["Data"].Children().ForEach(arrowRule => {
+                RowCol sum = arrowRule["Sum"].Values<int>().ToArray().Map(i => (RowCol)(i[0], i[1]));
+                IEnumerable<RowCol> arrow = arrowRule["Arrow"].Select(i => i.Values<int>().ToArray().Map(j => (RowCol)(j[0], j[1])));
+
+                sudokuGrid.AddConstraint(new ArrowConstraint(sum, arrow));
+            });
+        }
+
+        private static void HandleRegionRule(JToken rule, SudokuGrid sudokuGrid)
+        {
+            var regions = new Dictionary<char, List<RowCol>>();
+
+            HandleGridArray(rule["Data"], sudokuGrid, (row, col, c) => {
+                if (c != '.') {
+                    if (regions.ContainsKey(c)) {
+                        regions[c].Add((row, col));
+                    }
+                    else {
+                        regions[c] = new List<RowCol>() { (row, col) };
+                    }
                 }
             });
 
-            return sudokuGrid;
+            regions.ForEach(i => {
+                sudokuGrid.AddConstraint(new RegionConstraint(i.Value));
+            });
+        }
+
+        private static void HandleGridArray(JToken json, SudokuGrid sudokuGrid, Action<int, int, char> action)
+        {
+            string[] given = json.Children().Select(i => i.Value<string>()).ToArray();
+            if (given.Length != sudokuGrid.Size || given.Any(i => i.Length != sudokuGrid.Size)) {
+                throw new InvalidDataException();
+            }
+
+            for (int i = 0; i < sudokuGrid.Size; i++) {
+                for (int j = 0; j < sudokuGrid.Size; j++) {
+                    action(i + 1, j + 1, given[i][j]);
+                }
+            }
         }
     }
 }
