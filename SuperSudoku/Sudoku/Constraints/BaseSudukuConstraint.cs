@@ -9,11 +9,11 @@ namespace SuperSudoku.Sudoku.Constraints
         public virtual bool IsValid(ISudokuGrid grid, int row, int col, int value)
         {
             if (this.AffectsCell(grid, row, col)) {
-                if (grid.Set(row, col, value)) {
-                    bool result = this.Validate(grid);
-                    grid.Clear(row, col);
-                    return result;
-                }
+                //if (grid.Set(row, col, value)) {
+                //    bool result = this.Validate(grid);
+                //    grid.Clear(row, col);
+                //    return result;
+                //}
 
                 return false;
             }

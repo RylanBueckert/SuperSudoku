@@ -6,26 +6,26 @@ namespace SuperSudoku.Sudoku.Grid
 {
     public interface ISudokuGrid
     {
-        public int Size { get; }
+        int Size { get; }
 
-        public int Get(int row, int col);
+        int Get(int row, int col);
 
-        public void Set(int row, int col, int value);
+        void Set(int row, int col, int value);
 
-        public void Clear();
+        void Clear();
 
-        public void Clear(int row, int col);
+        void Clear(int row, int col);
 
-        public bool IsEmpty(int row, int col);
+        bool IsEmpty(int row, int col);
 
-        public bool IsValid();
+        bool IsValid();
 
-        public bool IsValid(int row, int col, int value);
+        bool IsValid(int row, int col, int value);
 
-        public bool IsSolved();
+        bool IsSolved();
 
-        public void AddConstraint(ISudokuConstraint constraint);
+        void AddConstraint(ISudokuConstraint constraint);
 
-        public IReadOnlyCollection<ISudokuConstraint> Constraints();
+        IReadOnlyCollection<ISudokuConstraint> Constraints();
     }
 }

@@ -8,7 +8,6 @@ using SuperSudoku.Utliity.Extentions;
 
 namespace SuperSudoku.Sudoku.Grid
 {
-
     public class SudokuGrid : ISudokuGrid
     {
         public int Size { get; }
@@ -25,7 +24,7 @@ namespace SuperSudoku.Sudoku.Grid
             var newGrid = new SudokuGrid(9);
             newGrid.AddConstraint(new RowsConstraint());
             newGrid.AddConstraint(new ColumnsConstraint());
-            newGrid.AddConstraint(new BoxsConstraint());
+            newGrid.AddConstraint(new StandardBoxesConstraint());
             return newGrid;
         }
 

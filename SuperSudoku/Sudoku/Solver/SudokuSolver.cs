@@ -1,9 +1,9 @@
 ﻿using System;
-using System.Linq;
 
-using SuperSudoku.Sudoku;
+using SuperSudoku.Sudoku.Grid;
 
-namespace SuperSudoku.Solver {
+namespace SuperSudoku.Solver
+{
     public class SudokuSolver : ISudokuSolver
     {
         public bool Solve(SudokuGrid grid)

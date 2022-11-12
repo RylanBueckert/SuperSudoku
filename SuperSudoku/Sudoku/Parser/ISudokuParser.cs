@@ -4,6 +4,6 @@ namespace SuperSudoku.Parser
 {
     public interface ISudokuParser
     {
-        SudokuGrid Parse(string path);
+        ISudokuGrid Parse(string path);
     }
 }

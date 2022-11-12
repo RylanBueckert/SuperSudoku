@@ -1,4 +1,4 @@
-﻿using SuperSudoku.Sudoku;
+﻿using SuperSudoku.Sudoku.Grid;
 
 namespace SuperSudoku.Solver
 {
