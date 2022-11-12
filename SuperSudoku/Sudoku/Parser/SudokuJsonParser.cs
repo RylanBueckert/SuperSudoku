@@ -44,7 +44,7 @@ namespace SuperSudoku.Parser
                 }
 
                 if (char.IsDigit(c)) {
-                    sudokuGrid.Set((row, col), int.Parse(c.ToString()));
+                    sudokuGrid.Set((row, col), int.Parse(c.ToString()), true);
                 }
             });
         }
@@ -67,6 +67,9 @@ namespace SuperSudoku.Parser
                         break;
                     case "DIAGANAL":
                         HandleDiaganalRule(rule, sudokuGrid);
+                        break;
+                    case "KILLER":
+                        HandleKillerRule(rule, sudokuGrid);
                         break;
                     default:
                         throw new NotSupportedException($"Unknown rule: {ruleName}");
@@ -110,6 +113,29 @@ namespace SuperSudoku.Parser
             bool positiveDiag = rule["\\"].Value<bool>();
 
             sudokuGrid.AddConstraint(new DiagonalConstraint(sudokuGrid.Size, positiveDiag, negativeDiag));
+        }
+
+        private static void HandleKillerRule(JToken rule, SudokuGrid sudokuGrid)
+        {
+            var regions = new Dictionary<char, List<RowCol>>();
+
+            HandleGridArray(rule["Cages"], sudokuGrid, (row, col, c) => {
+                if (c != '.') {
+                    if (regions.ContainsKey(c)) {
+                        regions[c].Add((row, col));
+                    }
+                    else {
+                        regions[c] = new List<RowCol>() { (row, col) };
+                    }
+                }
+            });
+
+            JToken sums = rule["Sums"];
+
+            regions.ForEach(i => {
+                int killerSum = sums[i.Key.ToString()].Value<int>();
+                sudokuGrid.AddConstraint(new KillerConstraint(i.Value, killerSum));
+            });
         }
 
         private static void HandleGridArray(JToken json, SudokuGrid sudokuGrid, Action<int, int, char> action)

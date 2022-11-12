@@ -10,15 +10,17 @@ namespace SuperSudoku.Sudoku.Grid
 {
     public class SudokuGrid : ISudokuGrid
     {
-        private const int EMPTY = 0;
+        public const int EMPTY = 0;
         private readonly int[,] grid;
         private readonly List<ISudokuConstraint> constraints;
+        private readonly HashSet<RowCol> givenCells;
 
         public SudokuGrid(int size)
         {
             this.Size = size;
             this.grid = new int[this.Size, this.Size];
             this.constraints = new List<ISudokuConstraint>();
+            this.givenCells = new HashSet<RowCol>();
         }
 
         public int Size { get; }
@@ -32,7 +34,7 @@ namespace SuperSudoku.Sudoku.Grid
             return this.At(rowCol);
         }
 
-        public void Set(RowCol rowCol, int value)
+        public bool Set(RowCol rowCol, int value, bool setGiven = false)
         {
             if (!this.isValidRange(rowCol)) {
                 throw new ArgumentOutOfRangeException(nameof(rowCol));
@@ -42,27 +44,45 @@ namespace SuperSudoku.Sudoku.Grid
                 throw new ArgumentOutOfRangeException(nameof(value));
             }
 
-            if (!this.IsEmpty(rowCol)) {
-                throw new InvalidOperationException($"The cell at {rowCol} is not empty");
+            if (setGiven) {
+                this.givenCells.Add(rowCol);
+            }
+            
+            if (setGiven || !this.IsGiven(rowCol)) {
+                this.At(rowCol) = value;
+                return true;
             }
 
-            this.At(rowCol) = value;
+            return false;
         }
 
-        public void Clear(RowCol rowCol)
+        public bool Clear(RowCol rowCol, bool clearGiven = false)
         {
             if (!this.isValidRange(rowCol)) {
                 throw new ArgumentOutOfRangeException(nameof(rowCol));
             }
 
-            this.At(rowCol) = EMPTY;
+            if(clearGiven) {
+                this.givenCells.Remove(rowCol);
+            }
+
+            if (clearGiven || !this.IsGiven(rowCol)) {
+                this.At(rowCol) = EMPTY;
+                return true;
+            }
+
+            return false;
         }
 
-        public void Clear()
+        public void Clear(bool clearGiven = false)
         {
-            for (int i = 0; i < this.Size; i++) {
-                for (int j = 0; j < this.Size; j++) {
-                    grid[i, j] = EMPTY;
+            if (clearGiven) {
+                this.givenCells.Clear();
+            }
+
+            for (int row = 0; row < this.Size; row++) {
+                for (int col = 0; col < this.Size; col++) {
+                    this.At((row, col)) = EMPTY;
                 }
             }
         }
@@ -75,6 +95,9 @@ namespace SuperSudoku.Sudoku.Grid
 
             return this.At(rowCol) == EMPTY;
         }
+
+        public bool IsGiven(RowCol rowCol) =>
+            this.givenCells.Contains(rowCol);
 
         public bool IsSolved() =>
             this.grid.ToEnumerable().All(i => i != EMPTY) &&

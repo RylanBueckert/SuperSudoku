@@ -29,27 +29,33 @@ namespace SuperSudoku.Sudoku.Constraints
         public bool IsValidPlacement(ISudokuGrid grid, RowCol rowCol, int value)
         {
             if (this.AffectsCell(rowCol)) {
-                if (grid.IsEmpty(rowCol)) {
-                    if (rowCol == this.sumCell) {
-                        return this.GetMaxArrowSum(grid) >= value && this.GetMinArrowSum(grid) <= value;
+                if (rowCol == this.sumCell) {
+                    return this.GetMaxArrowSum(grid) >= value && this.GetMinArrowSum(grid) <= value;
+                }
+                else {
+                    int oldValue = grid.Get(rowCol);
+                    if (!grid.Set(rowCol, value)) {
+                        return false;
+                    }
+
+                    int min = this.GetMinArrowSum(grid);
+                    int max = this.GetMaxArrowSum(grid);
+
+                    if (oldValue == SudokuGrid.EMPTY) {
+                        grid.Clear(rowCol);
                     }
                     else {
-                        grid.Set(rowCol, value);
-                        int min = this.GetMinArrowSum(grid);
-                        int max = this.GetMaxArrowSum(grid);
-                        grid.Clear(rowCol);
+                        grid.Set(rowCol, oldValue);
+                    }
 
-                        if (grid.IsEmpty(this.sumCell)) {
-                            return min <= grid.Size;
-                        }
-                        else {
-                            int target = grid.Get(this.sumCell);
-                            return min <= target && max >= target;
-                        }
+                    if (grid.IsEmpty(this.sumCell)) {
+                        return min <= grid.Size;
+                    }
+                    else {
+                        int target = grid.Get(this.sumCell);
+                        return min <= target && max >= target;
                     }
                 }
-
-                return false;
             }
 
             return true;

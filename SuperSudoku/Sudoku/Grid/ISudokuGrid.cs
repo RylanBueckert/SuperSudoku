@@ -10,13 +10,15 @@ namespace SuperSudoku.Sudoku.Grid
 
         int Get(RowCol rowCol);
 
-        void Set(RowCol rowCol, int value);
+        bool Set(RowCol rowCol, int value, bool isGiven = false);
 
-        void Clear();
+        void Clear(bool clearGiven = false);
 
-        void Clear(RowCol rowCol);
+        bool Clear(RowCol rowCol, bool clearGiven = false);
 
         bool IsEmpty(RowCol rowCol);
+
+        bool IsGiven(RowCol rowCol);
 
         bool IsSolved();
 

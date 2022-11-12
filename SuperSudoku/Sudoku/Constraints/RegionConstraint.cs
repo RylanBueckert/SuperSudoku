@@ -8,7 +8,7 @@ namespace SuperSudoku.Sudoku.Constraints
 {
     public class RegionConstraint : ISudokuConstraint
     {
-        private readonly HashSet<RowCol> cells;
+        protected readonly HashSet<RowCol> cells;
 
         public RegionConstraint(IEnumerable<RowCol> cells)
         {
@@ -17,7 +17,7 @@ namespace SuperSudoku.Sudoku.Constraints
             this.cells = cells.ToHashSet();
         }
 
-        public IEnumerable<RowCol> AffectedCells(RowCol rowCol)
+        public virtual IEnumerable<RowCol> AffectedCells(RowCol rowCol)
         {
             if (this.AffectsCell(rowCol)) {
                 return this.cells;
@@ -26,7 +26,7 @@ namespace SuperSudoku.Sudoku.Constraints
             return Enumerable.Empty<RowCol>();
         }
 
-        public bool IsValidPlacement(ISudokuGrid grid, RowCol rowCol, int value)
+        public virtual bool IsValidPlacement(ISudokuGrid grid, RowCol rowCol, int value)
         {
             if (this.AffectsCell(rowCol)) {
                 return this.cells.All(i => grid.Get(i) != value || i == rowCol);
@@ -35,10 +35,10 @@ namespace SuperSudoku.Sudoku.Constraints
             return true;
         }
 
-        public bool Validate(ISudokuGrid grid) =>
+        public virtual bool Validate(ISudokuGrid grid) =>
             !this.cells.Select(grid.Get).HasDuplicates();
 
-        private bool AffectsCell(RowCol rowCol) =>
+        protected bool AffectsCell(RowCol rowCol) =>
             this.cells.Contains(rowCol);
     }
 }
