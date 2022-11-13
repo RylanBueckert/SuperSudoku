@@ -3,7 +3,7 @@ using System.Linq;
 
 using SuperSudoku.Utliity;
 
-namespace SuperSudoku.Sudoku.Constraints
+namespace SuperSudoku.Sudoku
 {
     public static class BoxesHelper
     {
@@ -28,7 +28,8 @@ namespace SuperSudoku.Sudoku.Constraints
 
         private static BoxConfig GetBoxConfig(int gridSize)
         {
-            if (boxConfigs.TryGetValue(gridSize, out BoxConfig config)) {
+            if (boxConfigs.TryGetValue(gridSize, out BoxConfig config))
+            {
                 return config;
             }
 
