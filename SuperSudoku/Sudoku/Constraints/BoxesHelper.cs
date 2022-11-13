@@ -8,11 +8,16 @@ namespace SuperSudoku.Sudoku.Constraints
     public static class BoxesHelper
     {
         private readonly record struct BoxConfig(int boxRows, int boxColumns, int rowsInBox, int columnsInBox);
-        private static readonly BoxConfig config9x9 = new BoxConfig(3, 3, 3, 3);
-        private static readonly BoxConfig config6x6 = new BoxConfig(3, 2, 2, 3);
-        private static readonly BoxConfig config4x4 = new BoxConfig(2, 2, 2, 2);
-        private static readonly BoxConfig configDefault = new BoxConfig(0, 0, 0, 0);
 
+        private static readonly IReadOnlyDictionary<int, BoxConfig> boxConfigs = new Dictionary<int, BoxConfig>()
+        {
+            { 9, new BoxConfig(3, 3, 3, 3) },
+            { 6, new BoxConfig(3, 2, 2, 3) },
+            { 4, new BoxConfig(2, 2, 2, 2) }
+        };
+
+        public static bool HasBoxLayout(int gridSize) =>
+            boxConfigs.ContainsKey(gridSize);
 
         public static List<List<RowCol>> GetBoxes(int gridSize) =>
             GenerateBoxConstraints(GetBoxConfig(gridSize));
@@ -23,16 +28,12 @@ namespace SuperSudoku.Sudoku.Constraints
 
         private static BoxConfig GetBoxConfig(int gridSize)
         {
-            switch (gridSize) {
-                case 9:
-                    return config9x9;
-                case 6:
-                    return config6x6;
-                case 4:
-                    return config4x4;
-                default:
-                    return configDefault;
+            if (boxConfigs.TryGetValue(gridSize, out BoxConfig config)) {
+                return config;
             }
+
+            // Unknown box layout, every cell is in its own box
+            return new BoxConfig(gridSize, gridSize, 1, 1);
         }
 
         private static List<List<RowCol>> GenerateBoxConstraints(BoxConfig config) =>

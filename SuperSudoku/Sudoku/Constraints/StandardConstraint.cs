@@ -14,9 +14,12 @@ namespace SuperSudoku.Sudoku.Constraints
             this.subConstraints = new List<ISudokuConstraint>
             {
                 new RowsConstraint(gridSize),
-                new ColumnsConstraint(gridSize),
-                new BoxesConstraint(gridSize)
+                new ColumnsConstraint(gridSize)
             };
+
+            if (BoxesHelper.HasBoxLayout(gridSize)) {
+                this.subConstraints.Add(new BoxesConstraint(gridSize));
+            }
         }
 
         public IEnumerable<RowCol> AffectedCells(RowCol rowCol) =>
