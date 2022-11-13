@@ -77,6 +77,9 @@ namespace SuperSudoku.Parser
                     case "ANTIKNIGHT":
                         sudokuGrid.AddConstraint(new AntiKnightConstraint(sudokuGrid.Size));
                         break;
+                    case "DISJOINT":
+                        sudokuGrid.AddConstraint(new DisjointConstraint(sudokuGrid.Size));
+                        break;
                     default:
                         throw new NotSupportedException($"Unknown rule: {ruleName}");
                 }
