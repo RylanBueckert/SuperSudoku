@@ -62,6 +62,9 @@ namespace SuperSudoku.Parser
                     case "ARROW":
                         HandleArrowRule(rule, sudokuGrid);
                         break;
+                    case "THERMO":
+                        HandleThermoRule(rule, sudokuGrid);
+                        break;
                     case "REGIONS":
                         HandleRegionRule(rule, sudokuGrid);
                         break;
@@ -93,6 +96,15 @@ namespace SuperSudoku.Parser
                 IEnumerable<RowCol> arrow = arrowRule["Arrow"].Select(i => i.Values<int>().ToArray().Map(j => new RowCol(j[0], j[1])));
 
                 sudokuGrid.AddConstraint(new ArrowConstraint(sum, arrow));
+            });
+        }
+
+        private static void HandleThermoRule(JToken rule, SudokuGrid sudokuGrid)
+        {
+            rule["Data"].Children().ForEach(thermoRule => {
+                RowCol[] thermo = thermoRule["Thermo"].Select(i => i.Values<int>().ToArray().Map(j => new RowCol(j[0], j[1]))).ToArray();
+
+                sudokuGrid.AddConstraint(new ThermoConstraint(thermo));
             });
         }
 
