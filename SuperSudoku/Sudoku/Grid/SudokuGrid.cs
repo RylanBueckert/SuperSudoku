@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 
 using SuperSudoku.Sudoku.Constraints;
+using SuperSudoku.Sudoku.Formatter;
 using SuperSudoku.Utliity.Extentions;
 
 namespace SuperSudoku.Sudoku.Grid
@@ -14,6 +14,7 @@ namespace SuperSudoku.Sudoku.Grid
         private readonly int[,] grid;
         private readonly List<ISudokuConstraint> constraints;
         private readonly HashSet<RowCol> givenCells;
+        private readonly BoxesHelper.BoxConfig boxConfig;
 
         public SudokuGrid(int size)
         {
@@ -21,6 +22,12 @@ namespace SuperSudoku.Sudoku.Grid
             this.grid = new int[this.Size, this.Size];
             this.constraints = new List<ISudokuConstraint>();
             this.givenCells = new HashSet<RowCol>();
+
+            if (BoxesHelper.HasBoxLayout(size)) {
+                this.boxConfig = BoxesHelper.GetBoxConfig(size);
+            } else {
+                this.boxConfig = new BoxesHelper.BoxConfig(1, 1, size, size);
+            }
         }
 
         public int Size { get; }
@@ -47,7 +54,7 @@ namespace SuperSudoku.Sudoku.Grid
             if (setGiven) {
                 this.givenCells.Add(rowCol);
             }
-            
+
             if (setGiven || !this.IsGiven(rowCol)) {
                 this.At(rowCol) = value;
                 return true;
@@ -62,7 +69,7 @@ namespace SuperSudoku.Sudoku.Grid
                 throw new ArgumentOutOfRangeException(nameof(rowCol));
             }
 
-            if(clearGiven) {
+            if (clearGiven) {
                 this.givenCells.Remove(rowCol);
             }
 
@@ -114,34 +121,7 @@ namespace SuperSudoku.Sudoku.Grid
 
         public override string ToString()
         {
-            StringBuilder stringBuilder = new StringBuilder(132);
-
-            for (int i = 1; i <= this.Size; i++) {
-                for (int j = 1; j <= this.Size; j++) {
-                    int cellValue = this.Get((i, j));
-
-                    stringBuilder.Append(cellValue > 0 ? cellValue.ToString() : " ");
-
-                    if (j % 3 == 0 && j != this.Size) {
-                        stringBuilder.Append('║');
-                    }
-                }
-                stringBuilder.Append('\n');
-
-                if (i % 3 == 0 && i != this.Size) {
-                    for (int k = 1; k <= this.Size; k++) {
-                        stringBuilder.Append('=');
-
-                        if (k % 3 == 0 && k != this.Size) {
-                            stringBuilder.Append('╬');
-                        }
-                    }
-                    stringBuilder.Append('\n');
-                }
-
-            }
-
-            return stringBuilder.ToString();
+            return SudokuFormatter.Format(this, this.boxConfig.rowsInBox, this.boxConfig.columnsInBox);
         }
 
         private ref int At(RowCol rowCol) =>
