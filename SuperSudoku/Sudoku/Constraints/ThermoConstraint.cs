@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 
 using SuperSudoku.Sudoku.Grid;
@@ -18,7 +17,7 @@ namespace SuperSudoku.Sudoku.Constraints
         public IEnumerable<RowCol> AffectedCells(RowCol rowCol)
         {
             if (this.AffectsCell(rowCol)) {
-                return this.thermo;
+                return this.thermo.Where(i => i != rowCol);
             }
 
             return Enumerable.Empty<RowCol>();
@@ -73,7 +72,7 @@ namespace SuperSudoku.Sudoku.Constraints
 
         public bool Validate(ISudokuGrid grid)
         {
-            if(grid.Get(this.thermo[0]) == SudokuGrid.EMPTY) {
+            if (grid.Get(this.thermo[0]) == SudokuGrid.EMPTY) {
                 return false;
             }
 

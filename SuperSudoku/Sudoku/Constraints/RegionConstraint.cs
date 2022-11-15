@@ -20,7 +20,7 @@ namespace SuperSudoku.Sudoku.Constraints
         public virtual IEnumerable<RowCol> AffectedCells(RowCol rowCol)
         {
             if (this.AffectsCell(rowCol)) {
-                return this.cells;
+                return this.cells.Where(i => i != rowCol);
             }
 
             return Enumerable.Empty<RowCol>();

@@ -17,7 +17,7 @@ namespace SuperSudoku.Sudoku.Constraints
         public IEnumerable<RowCol> AffectedCells(RowCol rowCol)
         {
             if (this.AffectsCell(rowCol)) {
-                return this.palindrome;
+                return this.palindrome.Where(i => i != rowCol);
             }
 
             return Enumerable.Empty<RowCol>();

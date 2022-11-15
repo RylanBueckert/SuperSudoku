@@ -20,7 +20,7 @@ namespace SuperSudoku.Sudoku.Constraints
         public IEnumerable<RowCol> AffectedCells(RowCol rowCol)
         {
             if (this.AffectsCell(rowCol)) {
-                return this.arrowCells.Append(this.sumCell);
+                return this.arrowCells.Append(this.sumCell).Where(i => i != rowCol);
             }
 
             return Enumerable.Empty<RowCol>();
