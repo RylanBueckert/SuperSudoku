@@ -1,0 +1,16 @@
+{
+  "Name": "Small Tactics",
+  "Author": "randomra",
+  "Size": 6,
+  "GivenDigits": [
+    "2...5.",
+    ".....3",
+    "3.6..5",
+    ".4....",
+    "......",
+    ".3.4.1"
+  ],
+  "Rules": [
+    { "Name": "Standard" }
+  ]
+}
