@@ -89,6 +89,9 @@ namespace SuperSudoku.Parser
                     case "DISJOINT":
                         sudokuGrid.AddConstraint(new DisjointConstraint(sudokuGrid.Size));
                         break;
+                    case "PALINDROME":
+                        HandlePalindromeRule(rule, sudokuGrid);
+                        break;
                     default:
                         throw new NotSupportedException($"Unknown rule: {ruleName}");
                 }
@@ -162,6 +165,15 @@ namespace SuperSudoku.Parser
             regions.ForEach(i => {
                 int killerSum = sums[i.Key.ToString()].Value<int>();
                 sudokuGrid.AddConstraint(new KillerConstraint(i.Value, killerSum));
+            });
+        }
+
+        private static void HandlePalindromeRule(JToken rule, SudokuGrid sudokuGrid)
+        {
+            rule["Data"].Children().ForEach(palindromeRule => {
+                RowCol[] palindrome = palindromeRule["Palindrome"].Select(i => i.Values<int>().ToArray().Map(j => new RowCol(j[0], j[1]))).ToArray();
+
+                sudokuGrid.AddConstraint(new PalindromeConstraint(palindrome));
             });
         }
 
