@@ -1,8 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 
-using SuperSudoku.Utliity;
-
 namespace SuperSudoku.Sudoku
 {
     public static class BoxesHelper
@@ -19,22 +17,35 @@ namespace SuperSudoku.Sudoku
         public static bool HasBoxLayout(int gridSize) =>
             boxConfigs.ContainsKey(gridSize);
 
-        public static List<List<RowCol>> GetBoxes(int gridSize) =>
-            GenerateBoxes(GetBoxConfig(gridSize));
-
-        public static int GetBoxNum(int gridSize, RowCol rowCol) =>
-            GetBoxConfig(gridSize).Map(config =>
-                (rowCol.Row - 1) / config.rowsInBox * config.boxColumns + (rowCol.Col - 1) / config.columnsInBox);
-
-        public static BoxConfig GetBoxConfig(int gridSize)
+        public static List<List<RowCol>> GetBoxes(int gridSize)
         {
-            if (boxConfigs.TryGetValue(gridSize, out BoxConfig config))
-            {
+            BoxConfig? config = GetBoxConfig(gridSize);
+
+            if (config.HasValue) {
+                return GenerateBoxes(config.Value);
+            }
+
+            return new List<List<RowCol>>();
+        }
+
+        public static int GetBoxNum(int gridSize, RowCol rowCol)
+        {
+            BoxConfig? config = GetBoxConfig(gridSize);
+
+            if (config.HasValue) {
+                return (rowCol.Row - 1) / config.Value.rowsInBox * config.Value.boxColumns + (rowCol.Col - 1) / config.Value.columnsInBox;
+            }
+
+            return -1;
+        }
+
+        public static BoxConfig? GetBoxConfig(int gridSize)
+        {
+            if (boxConfigs.TryGetValue(gridSize, out BoxConfig config)) {
                 return config;
             }
 
-            // Unknown box layout, every cell is in its own box
-            return new BoxConfig(gridSize, gridSize, 1, 1);
+            return null;
         }
 
         private static List<List<RowCol>> GenerateBoxes(BoxConfig config) =>

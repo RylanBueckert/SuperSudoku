@@ -14,7 +14,6 @@ namespace SuperSudoku.Sudoku.Grid
         private readonly int[,] grid;
         private readonly List<ISudokuConstraint> constraints;
         private readonly HashSet<RowCol> givenCells;
-        private readonly BoxesHelper.BoxConfig boxConfig;
 
         public SudokuGrid(int size)
         {
@@ -22,19 +21,13 @@ namespace SuperSudoku.Sudoku.Grid
             this.grid = new int[this.Size, this.Size];
             this.constraints = new List<ISudokuConstraint>();
             this.givenCells = new HashSet<RowCol>();
-
-            if (BoxesHelper.HasBoxLayout(size)) {
-                this.boxConfig = BoxesHelper.GetBoxConfig(size);
-            } else {
-                this.boxConfig = new BoxesHelper.BoxConfig(1, 1, size, size);
-            }
         }
 
         public int Size { get; }
 
         public int Get(RowCol rowCol)
         {
-            if (!this.isValidRange(rowCol)) {
+            if (!this.IsValidRange(rowCol)) {
                 throw new ArgumentOutOfRangeException(nameof(rowCol));
             }
 
@@ -43,7 +36,7 @@ namespace SuperSudoku.Sudoku.Grid
 
         public bool Set(RowCol rowCol, int value, bool setGiven = false)
         {
-            if (!this.isValidRange(rowCol)) {
+            if (!this.IsValidRange(rowCol)) {
                 throw new ArgumentOutOfRangeException(nameof(rowCol));
             }
 
@@ -65,7 +58,7 @@ namespace SuperSudoku.Sudoku.Grid
 
         public bool Clear(RowCol rowCol, bool clearGiven = false)
         {
-            if (!this.isValidRange(rowCol)) {
+            if (!this.IsValidRange(rowCol)) {
                 throw new ArgumentOutOfRangeException(nameof(rowCol));
             }
 
@@ -96,7 +89,7 @@ namespace SuperSudoku.Sudoku.Grid
 
         public bool IsEmpty(RowCol rowCol)
         {
-            if (!this.isValidRange(rowCol)) {
+            if (!this.IsValidRange(rowCol)) {
                 throw new ArgumentOutOfRangeException(nameof(rowCol));
             }
 
@@ -119,15 +112,13 @@ namespace SuperSudoku.Sudoku.Grid
         public IEnumerable<ISudokuConstraint> Constraints() =>
             this.constraints;
 
-        public override string ToString()
-        {
-            return SudokuFormatter.Format(this, this.boxConfig.rowsInBox, this.boxConfig.columnsInBox);
-        }
+        public override string ToString() =>
+            SudokuFormatter.Format(this);
 
         private ref int At(RowCol rowCol) =>
             ref this.grid[rowCol.Row - 1, rowCol.Col - 1];
 
-        private bool isValidRange(RowCol rowCol) =>
+        private bool IsValidRange(RowCol rowCol) =>
             this.IsValidValue(rowCol.Row) &&
             this.IsValidValue(rowCol.Col);
 

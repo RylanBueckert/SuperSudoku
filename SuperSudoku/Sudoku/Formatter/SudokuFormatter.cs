@@ -2,12 +2,18 @@
 
 using SuperSudoku.Sudoku.Grid;
 
+using static SuperSudoku.Sudoku.BoxesHelper;
+
 namespace SuperSudoku.Sudoku.Formatter
 {
     public static class SudokuFormatter
     {
-        public static string Format(ISudokuGrid grid, int rowsInBox, int colsInBox)
+        public static string Format(ISudokuGrid grid)
         {
+            BoxConfig? boxConfig = GetBoxConfig(grid.Size);
+
+            (int rowsInBox, int colsInBox) = boxConfig.HasValue ? (boxConfig.Value.rowsInBox, boxConfig.Value.columnsInBox) : (grid.Size, grid.Size);
+
             StringBuilder stringBuilder = new StringBuilder();
 
             for (int i = 1; i <= grid.Size; i++) {
@@ -24,7 +30,7 @@ namespace SuperSudoku.Sudoku.Formatter
 
                 if (i % rowsInBox == 0 && i != grid.Size) {
                     for (int k = 1; k <= grid.Size; k++) {
-                        stringBuilder.Append('=');
+                        stringBuilder.Append('═');
 
                         if (k % colsInBox == 0 && k != grid.Size) {
                             stringBuilder.Append('╬');
