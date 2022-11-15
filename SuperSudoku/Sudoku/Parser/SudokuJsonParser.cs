@@ -74,7 +74,7 @@ namespace SuperSudoku.Parser
                     case "REGIONS":
                         HandleRegionRule(rule, sudokuGrid);
                         break;
-                    case "DIAGANAL":
+                    case "DIAGANOL":
                         HandleDiaganalRule(rule, sudokuGrid);
                         break;
                     case "KILLER":

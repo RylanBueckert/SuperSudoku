@@ -16,7 +16,7 @@
   "Rules": [
     { "Name": "Standard" },
     {
-      "Name": "Diaganal",
+      "Name": "Diagonal",
       "\\": true,
       "/": true
     }
