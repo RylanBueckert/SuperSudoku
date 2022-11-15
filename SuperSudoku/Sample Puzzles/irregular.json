@@ -1,0 +1,38 @@
+{
+  "Name": "Aug 9, 2022: Irregular Sudoku",
+  "Author": "Sam Cappleman-Lynes",
+  "Size": 9,
+  "GivenDigits": [
+    "7.4.6.8.1",
+    "8.5.7...2",
+    "........3",
+    ".1.......",
+    ".234.567.",
+    ".......8.",
+    "3........",
+    "4...8.1.5",
+    "5.7.9.2.6"
+  ],
+  "Rules": [
+    {
+      "Name": "Rows"
+    },
+    {
+      "Name": "Columns"
+    },
+    {
+      "Name": "Regions",
+      "Data": [
+        "aabbbbccc",
+        "aabbbbccc",
+        "aabdddccc",
+        "aeeedfffg",
+        "aeeedfffg",
+        "aeeedfffg",
+        "hhhdddigg",
+        "hhhiiiigg",
+        "hhhiiiigg"
+      ]
+    }
+  ]
+}

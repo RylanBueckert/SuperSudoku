@@ -59,6 +59,12 @@ namespace SuperSudoku.Parser
                     case "STANDARD":
                         sudokuGrid.AddConstraint(new StandardConstraint(sudokuGrid.Size));
                         break;
+                    case "ROWS":
+                        sudokuGrid.AddConstraint(new RowsConstraint(sudokuGrid.Size));
+                        break;
+                    case "COLUMNS":
+                        sudokuGrid.AddConstraint(new ColumnsConstraint(sudokuGrid.Size));
+                        break;
                     case "ARROW":
                         HandleArrowRule(rule, sudokuGrid);
                         break;
