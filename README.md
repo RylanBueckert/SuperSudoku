@@ -1,6 +1,6 @@
-# SuperSudoku
+# Super Sudoku
 
-This project solves multiple types of common varient or standard sudoku puzzles.
+This project solves multiple types of common variant or standard sudoku puzzles.
 
 ## Inputting Puzzles
 
