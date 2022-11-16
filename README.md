@@ -1,7 +1,7 @@
 # Super Sudoku
 
 This project solves multiple types of common variant or standard sudoku puzzles.
-There are multiple sample puzzles that can be solved included in this repo [here](./SamplePuzzles).
+There are multiple sample puzzles that can be solved included in this repo [here](./SuperSudoku/Sample%20Puzzles).
 You can input a custom puzzle, as long as you can represent the puzzle constraints with the supported [rules](#rule-Types).
 
 ## Inputting Puzzles
@@ -27,8 +27,8 @@ For standard sudoku puzzles, this is always 9. Currently it is not possible to i
 
 #### Given Digits
 
-The starting state of the puzzle. This is given as an array of strings. The array should have [size](#Size) strings, and each string should be [size](#Size)
-characters long. Think of the grid of characters as the sudoku grid itself. Place digits between 1 and the puzzle's [size](#Size),
+The starting state of the puzzle. This is given as an array of strings. The array should have [size](#size) strings, and each string should be [size](#size)
+characters long. Think of the grid of characters as the sudoku grid itself. Place digits between 1 and the puzzle's [size](#size),
 and use `.` (period) for cells that are empty. Here's an example ([World's Hardest Sudoku](https://www.conceptispuzzles.com/index.aspx?uri=info/article/424)):
 ```
 "GivenDigits": [
@@ -76,19 +76,19 @@ If this rule is present, then you should not specify the [rows](#rows) or [colum
 The layout of the boxes is determined by the size of the puzzle and only common puzzle sizes (4, 6, and 9) are supported.
 If using an uncommon puzzle size, boxes will just not be used. It is possible to use the [Regions](#Regions) rule to define custom box shapes.
 
-[Example](./SamplePuzzles/hardSudoku.json)
+[Example](./SuperSudoku/Sample%20Puzzles/hardSudoku.json)
 
 ### Rows
 
 This restricts each row of the puzzle to have only one of each digit. Do not use this rule if you are using the [standard](#standard) rule.
 
-[Example](./SamplePuzzles/hardSudoku.json)
+[Example](./SuperSudoku/Sample%20Puzzles/hardSudoku.json)
 
 ### Columns
 
 This restricts each column of the puzzle to have only one of each digit. Do not use this rule if you are using the [standard](#standard) rule.
 
-[Example](./SamplePuzzles/hardSudoku.json)
+[Example](./SuperSudoku/Sample%20Puzzles/hardSudoku.json)
 
 ### Arrow
 
@@ -99,40 +99,40 @@ Each arrow contains _Sum_ and _Arrow_. The _Sum_ is the [cell](#cell-format) tha
 The _Arrow_ is an array of [cells](#cell-format) that are the body of the arrow.
 The sum of all the values of the cells in the _Arrow_ is equal to the value of the _Sum_ cell.
 
-[Example](./SamplePuzzles/arrow.json)
+[Example](./SuperSudoku/Sample%20Puzzles/arrow.json)
 
 
 ### Thermo
 
-[Example](./SamplePuzzles/thermo.json)
+[Example](./SuperSudoku/Sample%20Puzzles/thermo.json)
 
 ### Regions
 
-[Example](./SamplePuzzles/regions.json)
+[Example](./SuperSudoku/Sample%20Puzzles/regions.json)
 
 ### Diagonal
 
-[Example](./SamplePuzzles/diagonal.json)
+[Example](./SuperSudoku/Sample%20Puzzles/diagonal.json)
 
 ### Killer
 
-[Example](./SamplePuzzles/killer.json)
+[Example](./SuperSudoku/Sample%20Puzzles/killer.json)
 
 ### AntiKing
 
-[Example](./SamplePuzzles/antiKing.json)
+[Example](./SuperSudoku/Sample%20Puzzles/antiKing.json)
 
 ### AntiKnight
 
-[Example](./SamplePuzzles/antiKnight.json)
+[Example](./SuperSudoku/Sample%20Puzzles/antiKnight.json)
 
 ### Disjoint
 
-[Example](./SamplePuzzles/disjoint.json)
+[Example](./SuperSudoku/Sample%20Puzzles/disjoint.json)
 
 ### Palindrome
 
-[Example](./SamplePuzzles/palindrome.json)
+[Example](./SuperSudoku/Sample%20Puzzles/palindrome.json)
 
 
 
