@@ -1,15 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-
-using SuperSudoku.Sudoku.Grid;
+﻿using System.Collections.Generic;
 
 namespace SuperSudoku.Sudoku.Constraints
 {
     public class AntiKingConstraint : BasePatternConstraint, ISudokuConstraint
     {
         public AntiKingConstraint(int gridSize)
-            :base(gridSize)
+            : base(gridSize)
         {
         }
 

@@ -2,7 +2,6 @@
 using System.Linq;
 
 using SuperSudoku.Sudoku.Grid;
-using SuperSudoku.Utliity.Extentions;
 
 namespace SuperSudoku.Sudoku.Constraints
 {
