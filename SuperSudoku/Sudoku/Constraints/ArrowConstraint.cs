@@ -2,7 +2,6 @@
 using System.Linq;
 
 using SuperSudoku.Sudoku.Grid;
-using SuperSudoku.Utliity.Extentions;
 
 namespace SuperSudoku.Sudoku.Constraints
 {
@@ -11,10 +10,10 @@ namespace SuperSudoku.Sudoku.Constraints
         private readonly RowCol sumCell;
         private readonly HashSet<RowCol> arrowCells;
 
-        public ArrowConstraint(RowCol sumCell, IEnumerable<RowCol> arrowCells)
+        public ArrowConstraint(RowCol sumCell, params RowCol[] arrowCells)
         {
             this.sumCell = sumCell;
-            this.arrowCells = arrowCells.ThrowArgIfNull(nameof(arrowCells)).ToHashSet();
+            this.arrowCells = arrowCells.ToHashSet();
         }
 
         public IEnumerable<RowCol> AffectedCells(RowCol rowCol)

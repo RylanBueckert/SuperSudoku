@@ -33,10 +33,10 @@ namespace SuperSudoku
             Console.WriteLine(grid);
             TimeSpan duration = Time(() => solver.Solve(grid));
             Console.WriteLine(grid);
-            Console.WriteLine(duration.TotalMilliseconds);
+            Console.WriteLine($"{duration.TotalMilliseconds} ms");
         }
 
-        public static TimeSpan Time(Func<bool> action)
+        public static TimeSpan Time(Action action)
         {
             Stopwatch stopwatch = Stopwatch.StartNew();
             action();

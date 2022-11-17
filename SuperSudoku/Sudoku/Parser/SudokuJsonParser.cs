@@ -102,7 +102,7 @@ namespace SuperSudoku.Parser
         {
             rule["Data"].Children().ForEach(arrowRule => {
                 RowCol sum = arrowRule["Sum"].Values<int>().ToArray().Map(i => new RowCol(i[0], i[1]));
-                IEnumerable<RowCol> arrow = arrowRule["Arrow"].Select(i => i.Values<int>().ToArray().Map(j => new RowCol(j[0], j[1])));
+                RowCol[] arrow = arrowRule["Arrow"].Select(i => i.Values<int>().ToArray().Map(j => new RowCol(j[0], j[1]))).ToArray();
 
                 sudokuGrid.AddConstraint(new ArrowConstraint(sum, arrow));
             });
