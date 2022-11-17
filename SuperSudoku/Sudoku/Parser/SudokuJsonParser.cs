@@ -92,6 +92,9 @@ namespace SuperSudoku.Parser
                     case "PALINDROME":
                         HandlePalindromeRule(rule, sudokuGrid);
                         break;
+                    case "GERMANWHISPER":
+                        HandleGermanWhisperRule(rule, sudokuGrid);
+                        break;
                     default:
                         throw new NotSupportedException($"Unknown rule: {ruleName}");
                 }
@@ -174,6 +177,15 @@ namespace SuperSudoku.Parser
                 RowCol[] palindrome = palindromeRule["Palindrome"].Select(i => i.Values<int>().ToArray().Map(j => new RowCol(j[0], j[1]))).ToArray();
 
                 sudokuGrid.AddConstraint(new PalindromeConstraint(palindrome));
+            });
+        }
+
+        private static void HandleGermanWhisperRule(JToken rule, SudokuGrid sudokuGrid)
+        {
+            rule["Data"].Children().ForEach(whisperRule => {
+                RowCol[] whisper = whisperRule["Whisper"].Select(i => i.Values<int>().ToArray().Map(j => new RowCol(j[0], j[1]))).ToArray();
+
+                sudokuGrid.AddConstraint(new GermanWhispersConstraint(whisper));
             });
         }
 

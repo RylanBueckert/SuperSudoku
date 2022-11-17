@@ -62,7 +62,7 @@ namespace SuperSudoku.Sudoku.Constraints
 
         public bool Validate(ISudokuGrid grid)
         {
-            if (grid.IsEmpty(this.sumCell) || this.arrowCells.Any(i => grid.IsEmpty(i))) {
+            if (grid.IsEmpty(this.sumCell) || this.arrowCells.Any(grid.IsEmpty)) {
                 return false;
             }
 
