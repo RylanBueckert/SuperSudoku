@@ -116,7 +116,7 @@ The sum of all the values of the cells in the _Arrow_ is equal to the value of t
 
 ### Killer
 
-[Example](./SuperSudoku/Sample%20Puzzles/killer.json)
+[Example](./SuperSudoku/Sample%20Puzzles/killerCage.json)
 
 ### AntiKing
 
