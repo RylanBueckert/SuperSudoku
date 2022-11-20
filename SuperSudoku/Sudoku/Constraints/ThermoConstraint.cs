@@ -37,7 +37,7 @@ namespace SuperSudoku.Sudoku.Constraints
                 for (int i = thermoIdx - 1; i >= 0; i--) {
                     int val = grid.Get(this.thermo[i]);
 
-                    if (val == SudokuGrid.EMPTY) {
+                    if (grid.IsEmpty(this.thermo[i])) {
                         acceptable--;
                         continue;
                     }
@@ -52,13 +52,11 @@ namespace SuperSudoku.Sudoku.Constraints
                 // Check After
                 acceptable = value + 1;
                 for (int i = thermoIdx + 1; i < this.thermo.Count; i++) {
-                    int val = grid.Get(this.thermo[i]);
-
-                    if (val == SudokuGrid.EMPTY) {
+                    if (grid.IsEmpty(this.thermo[i])) {
                         acceptable++;
                         continue;
                     }
-                    else if (val < acceptable) {
+                    else if (grid.Get(this.thermo[i]) < acceptable) {
                         return false;
                     }
                     else {
@@ -72,7 +70,7 @@ namespace SuperSudoku.Sudoku.Constraints
 
         public bool Validate(ISudokuGrid grid)
         {
-            if (grid.Get(this.thermo[0]) == SudokuGrid.EMPTY) {
+            if (grid.IsEmpty(this.thermo[0])) {
                 return false;
             }
 

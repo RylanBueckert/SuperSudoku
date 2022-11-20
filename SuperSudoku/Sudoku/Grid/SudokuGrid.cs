@@ -10,7 +10,6 @@ namespace SuperSudoku.Sudoku.Grid
 {
     public class SudokuGrid : ISudokuGrid
     {
-        public const int EMPTY = 0;
         private readonly int[,] grid;
         private readonly List<ISudokuConstraint> constraints;
         private readonly HashSet<RowCol> givenCells;
@@ -67,7 +66,7 @@ namespace SuperSudoku.Sudoku.Grid
             }
 
             if (clearGiven || !this.IsGiven(rowCol)) {
-                this.At(rowCol) = EMPTY;
+                this.At(rowCol) = ISudokuGrid.EmptyValue;
                 return true;
             }
 
@@ -82,7 +81,7 @@ namespace SuperSudoku.Sudoku.Grid
 
             for (int row = 0; row < this.Size; row++) {
                 for (int col = 0; col < this.Size; col++) {
-                    this.At((row, col)) = EMPTY;
+                    this.At((row, col)) = ISudokuGrid.EmptyValue;
                 }
             }
         }
@@ -93,14 +92,14 @@ namespace SuperSudoku.Sudoku.Grid
                 throw new ArgumentOutOfRangeException(nameof(rowCol));
             }
 
-            return this.At(rowCol) == EMPTY;
+            return this.At(rowCol) == ISudokuGrid.EmptyValue;
         }
 
         public bool IsGiven(RowCol rowCol) =>
             this.givenCells.Contains(rowCol);
 
         public bool IsSolved() =>
-            this.grid.ToEnumerable().All(i => i != EMPTY) &&
+            this.grid.ToEnumerable().All(i => i != ISudokuGrid.EmptyValue) &&
             this.constraints.All(i => i.Validate(this));
 
         public bool IsValid(RowCol rowCol, int value) =>

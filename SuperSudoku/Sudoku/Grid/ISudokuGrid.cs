@@ -6,6 +6,8 @@ namespace SuperSudoku.Sudoku.Grid
 {
     public interface ISudokuGrid
     {
+        static int EmptyValue => 0;
+
         int Size { get; }
 
         int Get(RowCol rowCol);

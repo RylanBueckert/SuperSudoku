@@ -31,7 +31,7 @@ namespace SuperSudoku.Sudoku.Constraints
                 int min = this.GetMinPossibleSum(grid);
                 int max = this.GetMaxPossibleSum(grid);
 
-                if (oldValue == SudokuGrid.EMPTY) {
+                if (oldValue == ISudokuGrid.EmptyValue) {
                     grid.Clear(rowCol);
                 }
                 else {
