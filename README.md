@@ -135,6 +135,8 @@ This rule creates custom regions or boxes in the puzzle. Each region cannot cont
 This is usefull to create jigsaw/irregular puzzles, as well as adding extra regions.
 This rule contains a _Data_ field which is a [grid array](#grid-array).
 Place characters to create regions in the grid. Any cell with the same characters are part of the same region.
+Cells that have `.` are not added to any region.
+If you have regions that overlap, you will need to create the regions rule multiple times.
 
 [Example](./Sample%20Puzzles/regions.json)
 
