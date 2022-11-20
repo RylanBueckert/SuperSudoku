@@ -1,0 +1,35 @@
+{
+  "Name": "Second Law of Thermodynamics",
+  "Author": "Bill Murphy",
+  "Size": 9,
+  "GivenDigits": [
+    "..3...5..",
+    ".2.6.....",
+    "1.5.....6",
+    ".4.8.....",
+    "..7...1..",
+    ".....9.7.",
+    "5.....6.4",
+    ".....5.3.",
+    "..6...2.."
+  ],
+  "Rules": [
+    {
+      "Name": "Standard"
+    },
+    {
+      "Name": "Regions",
+      "Data": [
+        ".........",
+        ".aaa.bbb.",
+        ".aaa.bbb.",
+        ".aaa.bbb.",
+        ".........",
+        ".ccc.ddd.",
+        ".ccc.ddd.",
+        ".ccc.ddd.",
+        "........."
+      ]
+    }
+  ]
+}
