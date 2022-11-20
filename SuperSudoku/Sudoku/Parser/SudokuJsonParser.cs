@@ -95,6 +95,9 @@ namespace SuperSudoku.Parser
                     case "GERMANWHISPER":
                         HandleGermanWhisperRule(rule, sudokuGrid);
                         break;
+                    case "RENBAN":
+                        HandleRenbanRule(rule, sudokuGrid);
+                        break;
                     default:
                         throw new NotSupportedException($"Unknown rule: {ruleName}");
                 }
@@ -186,6 +189,15 @@ namespace SuperSudoku.Parser
                 RowCol[] whisper = whisperRule["Whisper"].Select(i => i.Values<int>().ToArray().Map(j => new RowCol(j[0], j[1]))).ToArray();
 
                 sudokuGrid.AddConstraint(new GermanWhispersConstraint(whisper));
+            });
+        }
+
+        private static void HandleRenbanRule(JToken rule, SudokuGrid sudokuGrid)
+        {
+            rule["Data"].Children().ForEach(renbanRule => {
+                RowCol[] renban = renbanRule["Renban"].Select(i => i.Values<int>().ToArray().Map(j => new RowCol(j[0], j[1]))).ToArray();
+
+                sudokuGrid.AddConstraint(new RenbanConstraint(renban));
             });
         }
 

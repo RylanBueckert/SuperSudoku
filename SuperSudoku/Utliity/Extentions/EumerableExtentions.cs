@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace SuperSudoku.Utliity.Extentions
 {
@@ -7,7 +8,7 @@ namespace SuperSudoku.Utliity.Extentions
     {
         public static void ForEach<T>(this IEnumerable<T> @this, Action<T> func)
         {
-            foreach(var t in @this) {
+            foreach (var t in @this) {
                 func(t);
             }
         }
@@ -23,5 +24,8 @@ namespace SuperSudoku.Utliity.Extentions
 
             return false;
         }
+
+        public static bool IsConsecutive(this IEnumerable<int> @this) =>
+            !@this.Select((v, i) => v - i).Distinct().Skip(1).Any();
     }
 }
