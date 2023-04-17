@@ -22,6 +22,22 @@ namespace SuperSudoku.Sudoku.Grid
             this.givenCells = new HashSet<RowCol>();
         }
 
+        public SudokuGrid(ISudokuGrid copyThis)
+            : this(copyThis.Size)
+        {
+            copyThis.Constraints().ForEach(c => this.AddConstraint(c));
+
+            for (int row = 1; row <= this.Size; row++) {
+                for (int col = 1; col <= this.Size; col++) {
+                    RowCol rowCol = (row, col);
+                    var value = copyThis.Get(rowCol);
+                    if (value != ISudokuGrid.EmptyValue) {
+                        this.Set(rowCol, copyThis.Get(rowCol), copyThis.IsGiven(rowCol));
+                    }
+                }
+            }
+        }
+
         public int Size { get; }
 
         public int Get(RowCol rowCol)
@@ -81,7 +97,7 @@ namespace SuperSudoku.Sudoku.Grid
 
             for (int row = 0; row < this.Size; row++) {
                 for (int col = 0; col < this.Size; col++) {
-                    this.At((row, col)) = ISudokuGrid.EmptyValue;
+                    this.grid[row, col] = ISudokuGrid.EmptyValue;
                 }
             }
         }
